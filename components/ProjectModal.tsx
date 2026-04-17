@@ -74,11 +74,16 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
   // Parse images from JSON
   let galleryImages: string[] = [];
   if (project.images) {
-    try {
-      const parsed = JSON.parse(project.images);
-      galleryImages = Array.isArray(parsed) ? parsed : [];
-    } catch {
-      galleryImages = [];
+    // Check if images is already an array or a string
+    if (Array.isArray(project.images)) {
+      galleryImages = project.images;
+    } else if (typeof project.images === 'string') {
+      try {
+        const parsed = JSON.parse(project.images);
+        galleryImages = Array.isArray(parsed) ? parsed : [];
+      } catch {
+        galleryImages = [];
+      }
     }
   }
   
