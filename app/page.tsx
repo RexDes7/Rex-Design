@@ -58,18 +58,30 @@ export default function Home() {
       .then(data => {
         if (isMounted && data.success) {
           // Normalize imageAlt field and map to Project type
-          const normalizedProjects: Project[] = data.data.map((p: any) => ({
-            id: p.id,
-            title: p.title,
-            description: p.description,
-            category: p.category as Project['category'],
-            year: p.year,
-            image: p.image,
-            imageAlt: p.image_alt || p.imageAlt || '',
-            images: p.images, // Add images field
-            wide: p.wide,
-            featured: p.featured
-          }));
+          const normalizedProjects: Project[] = data.data.map((p: any) => {
+            // Parse images if it's a string
+            let images = p.images;
+            if (typeof images === 'string') {
+              try {
+                images = JSON.parse(images);
+              } catch (e) {
+                images = [];
+              }
+            }
+            
+            return {
+              id: p.id,
+              title: p.title,
+              description: p.description,
+              category: p.category as Project['category'],
+              year: p.year,
+              image: p.image,
+              imageAlt: p.image_alt || p.imageAlt || '',
+              images: images,
+              wide: p.wide,
+              featured: p.featured
+            };
+          });
           setProjects(normalizedProjects);
         }
       })
