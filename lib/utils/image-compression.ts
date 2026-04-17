@@ -11,10 +11,10 @@ export interface CompressionOptions {
 }
 
 const DEFAULT_OPTIONS: CompressionOptions = {
-  maxWidth: 2560,
-  maxHeight: 2560,
-  quality: 0.92,
-  maxSizeMB: 3,
+  maxWidth: 3840, // 4K resolution
+  maxHeight: 2160, // 4K resolution
+  quality: 0.95, // Higher quality
+  maxSizeMB: 10, // Allow larger files
 };
 
 /**
@@ -53,10 +53,14 @@ export async function compressImage(
           return;
         }
         
+        // Enable image smoothing for better quality
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        
         // Draw image
         ctx.drawImage(img, 0, 0, width, height);
         
-        // Convert to blob
+        // Convert to blob with high quality
         canvas.toBlob(
           (blob) => {
             if (!blob) {
@@ -64,36 +68,12 @@ export async function compressImage(
               return;
             }
             
-            // Check size
-            const sizeMB = blob.size / 1024 / 1024;
+            const compressedFile = new File([blob], file.name, {
+              type: file.type,
+              lastModified: Date.now(),
+            });
             
-            if (sizeMB > opts.maxSizeMB!) {
-              // Try with lower quality
-              canvas.toBlob(
-                (blob2) => {
-                  if (!blob2) {
-                    reject(new Error('Failed to compress image'));
-                    return;
-                  }
-                  
-                  const compressedFile = new File([blob2], file.name, {
-                    type: file.type,
-                    lastModified: Date.now(),
-                  });
-                  
-                  resolve(compressedFile);
-                },
-                file.type,
-                0.7 // Lower quality
-              );
-            } else {
-              const compressedFile = new File([blob], file.name, {
-                type: file.type,
-                lastModified: Date.now(),
-              });
-              
-              resolve(compressedFile);
-            }
+            resolve(compressedFile);
           },
           file.type,
           opts.quality

@@ -167,10 +167,10 @@ export default function ImageUploader({
       // Compress image before upload
       console.log('[UPLOAD] Original size:', (selectedFile.size / 1024 / 1024).toFixed(2), 'MB');
       const compressedFile = await compressImage(selectedFile, {
-        maxWidth: 2560,
-        maxHeight: 2560,
-        quality: 0.92,
-        maxSizeMB: 3,
+        maxWidth: 3840, // 4K resolution
+        maxHeight: 2160, // 4K resolution
+        quality: 0.95, // Higher quality
+        maxSizeMB: 10, // Allow larger files
       });
       console.log('[UPLOAD] Compressed size:', (compressedFile.size / 1024 / 1024).toFixed(2), 'MB');
       
