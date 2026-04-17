@@ -6,6 +6,12 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
     unoptimized: true, // Allow unoptimized images for development
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+    ],
   },
   reactStrictMode: false,
   // Compress output
@@ -16,6 +22,12 @@ const nextConfig = {
   poweredByHeader: false,
   // Optimize fonts
   optimizeFonts: true,
+  // Increase body size limit for file uploads
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  },
 }
 
 module.exports = nextConfig
