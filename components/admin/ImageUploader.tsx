@@ -169,8 +169,8 @@ export default function ImageUploader({
       const compressedFile = await compressImage(selectedFile, {
         maxWidth: 3840, // 4K resolution
         maxHeight: 2160, // 4K resolution
-        quality: 0.95, // Higher quality
-        maxSizeMB: 10, // Allow larger files
+        quality: 0.95, // Starting quality (will be adjusted if needed)
+        maxSizeMB: 4, // Vercel limit
       });
       console.log('[UPLOAD] Compressed size:', (compressedFile.size / 1024 / 1024).toFixed(2), 'MB');
       
