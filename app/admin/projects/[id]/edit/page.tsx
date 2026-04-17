@@ -7,6 +7,7 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '@/styles/admin/ProjectForm.module.css';
+import { compressImage } from '@/lib/utils/image-compression';
 
 interface EditProjectPageProps {
   params: {
@@ -93,8 +94,18 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
       // Upload new images if provided
       if (newImages.length > 0) {
         for (const file of newImages) {
+          // Compress image before upload
+          console.log('[UPLOAD] Original size:', (file.size / 1024 / 1024).toFixed(2), 'MB');
+          const compressedFile = await compressImage(file, {
+            maxWidth: 1920,
+            maxHeight: 1920,
+            quality: 0.85,
+            maxSizeMB: 1.5,
+          });
+          console.log('[UPLOAD] Compressed size:', (compressedFile.size / 1024 / 1024).toFixed(2), 'MB');
+          
           const formData = new FormData();
-          formData.append('file', file);
+          formData.append('file', compressedFile);
 
           const uploadRes = await fetch('/api/admin/upload', {
             method: 'POST',
