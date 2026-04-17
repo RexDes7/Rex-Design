@@ -4,8 +4,8 @@ export function generateOrganizationSchema() {
     '@type': 'Organization',
     name: 'REX DESIGN',
     alternateName: 'РЕХ ДИЗАЙН',
-    url: 'https://rex-design-stodio.vercel.app',
-    logo: 'https://rex-design-stodio.vercel.app/images/portrait.svg',
+    url: 'https://rex-dsgn.vercel.app',
+    logo: 'https://rex-dsgn.vercel.app/images/portrait.svg',
     description: 'Профессиональная дизайн студия. Брендинг, веб-дизайн, типографика, UI/UX.',
     founder: {
       '@type': 'Person',
@@ -23,7 +23,7 @@ export function generateWebSiteSchema() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'REX DESIGN',
-    url: 'https://rex-design-stodio.vercel.app',
+    url: 'https://rex-dsgn.vercel.app',
     description: 'Профессиональная дизайн студия',
     inLanguage: 'ru-RU',
   };
@@ -39,7 +39,7 @@ export function generatePersonSchema() {
       '@type': 'Organization',
       name: 'REX DESIGN',
     },
-    url: 'https://rex-design-stodio.vercel.app',
+    url: 'https://rex-dsgn.vercel.app',
     sameAs: [],
   };
 }

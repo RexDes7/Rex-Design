@@ -26,7 +26,7 @@ const spaceGrotesk = Space_Grotesk({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://rex-design-stodio.vercel.app'),
+  metadataBase: new URL('https://rex-dsgn.vercel.app'),
   title: {
     default: 'REX DESIGN - Дизайн студия | Брендинг, Веб-дизайн, Типографика',
     template: '%s | REX DESIGN',
@@ -50,13 +50,13 @@ export const metadata: Metadata = {
     'дизайнер',
     'портфолио дизайнера',
   ],
-  authors: [{ name: 'Апарян Рафаэль', url: 'https://rex-design-stodio.vercel.app' }],
+  authors: [{ name: 'Апарян Рафаэль', url: 'https://rex-dsgn.vercel.app' }],
   creator: 'REX DESIGN',
   publisher: 'REX DESIGN',
   openGraph: {
     type: 'website',
     locale: 'ru_RU',
-    url: 'https://rex-design-stodio.vercel.app',
+    url: 'https://rex-dsgn.vercel.app',
     siteName: 'REX DESIGN',
     title: 'REX DESIGN - Дизайн студия | Брендинг, Веб-дизайн, Типографика',
     description: 'Профессиональная дизайн студия. Создаём брендинг, веб-дизайн, типографику, UI/UX. Портфолио работ с 2020 года.',
@@ -87,7 +87,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://rex-design-stodio.vercel.app',
+    canonical: 'https://rex-dsgn.vercel.app',
   },
 }
 
