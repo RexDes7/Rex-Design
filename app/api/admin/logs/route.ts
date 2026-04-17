@@ -17,6 +17,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { loggerService } from '@/lib/services/logger.service';
 import type { LogType, LogSeverity } from '@/lib/db/schema';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;

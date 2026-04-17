@@ -5,6 +5,8 @@ import type { AdminAction } from '@/lib/types/logger';
 import { validateCSRFFromRequest, createCSRFErrorResponse } from '@/lib/utils/csrf';
 import { sanitizeObject, isValidEmail } from '@/lib/utils/validation';
 
+export const dynamic = 'force-dynamic';
+
 const logger = new LoggerServiceImpl();
 
 /**
