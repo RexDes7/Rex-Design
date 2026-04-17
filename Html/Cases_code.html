@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@800;900&amp;family=Space+Grotesk:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "error-dim": "#b92902",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed-variant": "#6c6d6e",
+              "on-primary-fixed": "#453900",
+              "tertiary-fixed": "#ffffff",
+              "error-container": "#f95630",
+              "on-surface-variant": "#5a5c5c",
+              "tertiary": "#5a5c5c",
+              "primary-fixed": "#ffd709",
+              "on-tertiary": "#f2f3f3",
+              "tertiary-fixed-dim": "#f0f1f1",
+              "tertiary-dim": "#4e5050",
+              "outline-variant": "#acadad",
+              "primary-container": "#ffd709",
+              "background": "#f6f6f6",
+              "on-surface": "#2d2f2f",
+              "surface": "#f6f6f6",
+              "surface-container-high": "#e1e3e3",
+              "on-error-container": "#520c00",
+              "error": "#b02500",
+              "primary-dim": "#5e4e00",
+              "inverse-primary": "#ffd709",
+              "surface-bright": "#f6f6f6",
+              "on-secondary-fixed-variant": "#5b5b5b",
+              "outline": "#757777",
+              "surface-container": "#e7e8e8",
+              "on-background": "#2d2f2f",
+              "on-tertiary-fixed": "#4f5051",
+              "inverse-on-surface": "#9c9d9d",
+              "primary-fixed-dim": "#efc900",
+              "surface-dim": "#d2d5d5",
+              "surface-container-highest": "#dbdddd",
+              "on-primary": "#fff2cd",
+              "surface-tint": "#6c5a00",
+              "primary": "#6c5a00",
+              "tertiary-container": "#ffffff",
+              "on-secondary-fixed": "#3f3f3f",
+              "on-secondary-container": "#525252",
+              "surface-container-low": "#f0f1f1",
+              "secondary-fixed-dim": "#d4d4d4",
+              "inverse-surface": "#0c0f0f",
+              "secondary-container": "#e2e2e2",
+              "on-error": "#ffefec",
+              "on-secondary": "#f3f3f3",
+              "secondary": "#5b5b5b",
+              "on-primary-container": "#5b4b00",
+              "on-primary-fixed-variant": "#665500",
+              "secondary-dim": "#4f4f4f",
+              "on-tertiary-container": "#616263",
+              "surface-variant": "#dbdddd",
+              "secondary-fixed": "#e2e2e2"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Space Grotesk"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hard-shadow {
+            box-shadow: 8px 8px 0px 0px #000000;
+        }
+        .hard-shadow-sm {
+            box-shadow: 4px 4px 0px 0px #000000;
+        }
+        .active-nav-link {
+            text-decoration: underline;
+            text-underline-offset: 8px;
+            text-decoration-thickness: 4px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container">
+<!-- TopNavBar -->
+<nav class="bg-white dark:bg-black docked full-width top-0 border-b-[4px] border-black dark:border-yellow-400 z-50 sticky">
+<div class="flex justify-between items-center w-full px-6 py-4 md:px-12">
+<div class="text-3xl font-black text-black dark:text-white uppercase tracking-[-0.05em] font-headline">
+                АРХИВ-24
+            </div>
+<div class="hidden md:flex items-center gap-12 font-['Plus_Jakarta_Sans'] font-black uppercase tracking-tighter text-xl">
+<a class="text-black dark:text-yellow-400 underline decoration-[4px] underline-offset-8" href="#">ПОРТФОЛИО</a>
+<a class="text-black/60 dark:text-white/60 hover:bg-yellow-400 hover:text-black transition-colors duration-100" href="#">ОБО МНЕ</a>
+<a class="text-black/60 dark:text-white/60 hover:bg-yellow-400 hover:text-black transition-colors duration-100" href="#">КОНТАКТЫ</a>
+</div>
+<button class="bg-primary-container text-on-primary-container border-[3px] border-black px-6 py-2 font-black uppercase tracking-tighter hover:bg-black hover:text-white hard-shadow-sm transition-all active:translate-x-1 active:translate-y-1 active:shadow-none">
+                ЗАКАЗАТЬ
+            </button>
+</div>
+</nav>
+<main class="min-h-screen">
+<!-- Hero Section -->
+<section class="px-6 md:px-12 py-16 border-b-[4px] border-black bg-white">
+<div class="max-w-7xl mx-auto">
+<h1 class="font-headline font-black text-6xl md:text-9xl uppercase tracking-tighter leading-[0.85] mb-8">
+                    ЦИФРОВОЙ<br/><span class="text-primary-container text-stroke-3">МАНИФЕСТ</span>
+</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-end">
+<p class="font-body text-xl md:text-2xl font-bold uppercase leading-tight max-w-xl">
+                        БРУТАЛЬНЫЙ ДИЗАЙН ДЛЯ ТЕХ, КТО НЕ БОИТСЯ БЫТЬ ЗАМЕЧЕННЫМ. МЫ НЕ СТРОИМ ИНТЕРФЕЙСЫ, МЫ СОЗДАЕМ АРТЕФАКТЫ.
+                    </p>
+<div class="flex justify-start md:justify-end gap-4">
+<div class="w-32 h-32 bg-black flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-6xl" style="font-variation-settings: 'FILL' 1;">deployed_code</span>
+</div>
+<div class="w-32 h-32 bg-primary-container border-[4px] border-black flex items-center justify-center">
+<span class="material-symbols-outlined text-6xl text-black">grid_view</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Filter / Grid Header -->
+<div class="bg-black text-white px-6 md:px-12 py-4 flex flex-wrap justify-between items-center gap-4">
+<div class="flex gap-8 font-label font-bold uppercase text-sm tracking-widest overflow-x-auto whitespace-nowrap">
+<span class="text-primary-container underline decoration-2 underline-offset-4 cursor-pointer">ВСЕ ПРОЕКТЫ</span>
+<span class="hover:text-primary-container cursor-pointer">ВЕБ-ДИЗАЙН</span>
+<span class="hover:text-primary-container cursor-pointer">БРЕНДИНГ</span>
+<span class="hover:text-primary-container cursor-pointer">ТИПОГРАФИКА</span>
+<span class="hover:text-primary-container cursor-pointer">UI/UX</span>
+</div>
+<div class="font-body text-sm font-bold opacity-50 uppercase">
+                ПОКАЗАНО: 08 КЕЙСОВ / 2024
+            </div>
+</div>
+<!-- Cases Grid -->
+<section class="p-6 md:p-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+<!-- Case 1: Branding -->
+<article class="group relative bg-white border-[4px] border-black hard-shadow transition-all hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[16px_16px_0px_0px_#000000]">
+<div class="aspect-square bg-surface-container-high border-b-[4px] border-black overflow-hidden">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="extreme brutalist graphic design poster with bold black typography on neon yellow background with high contrast shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRluEpdpcmopjjeCa-dA2vLH71TgCWqAJ6zAv-C6tw1S8DVSGn3jF6KibsRiwfmxS-GhPFdZW-UbTJhkVyo9p2LE0akAbB2SH71_bIYVKoqgVsWMqaP1OuloGsCgeHMXbE3z8ZS9XByDeeWiUF7GfPgWwP7ZBqD6ucKj0ADxNMew41HuayH1NMDQVyu7hZ5HgBjoIBlSMDJISw2oCtPEfZrGjGXhxyM1QB9ZPgpxcCDc5jhEsUkSey91uxKpLOmTMmP-Em7BJ9hfEN"/>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<h2 class="font-headline font-black text-3xl uppercase tracking-tighter leading-none">БРЕНДИНГ</h2>
+<span class="font-label font-bold bg-black text-white px-2 py-1 text-xs">2024</span>
+</div>
+<p class="font-body text-sm font-bold uppercase mb-6 opacity-70">РАЗРАБОТКА ВИЗУАЛЬНОЙ ИДЕНТИЧНОСТИ ДЛЯ ТЕХНО-КЛУБА "ОКТАН".</p>
+<div class="flex items-center gap-2 font-black text-black group-hover:text-primary-dim transition-colors">
+                        СМОТРЕТЬ КЕЙС <span class="material-symbols-outlined">arrow_right_alt</span>
+</div>
+</div>
+</article>
+<!-- Case 2: Web Design (Featured Wide) -->
+<article class="group md:col-span-2 relative bg-primary-container border-[4px] border-black hard-shadow transition-all hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[16px_16px_0px_0px_#000000]">
+<div class="grid grid-cols-1 md:grid-cols-5 h-full">
+<div class="md:col-span-3 aspect-video md:aspect-auto bg-black border-b-[4px] md:border-b-0 md:border-r-[4px] border-black overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="clean minimal web interface shown on a glitchy monitor screen with heavy black borders and stark yellow accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDP4gjw4Jk-XONnReeOCkLD6fZA9PEsqZTj3q42uATmoHxtZSXM5vgkHONFVqDyZWxQk4q6IevrJu-gJ5T-8xFYTQHi3GErTWO5WnErzvuejABG6-TbglaApQ6Ae2OCDfIImT35H_UzodypUTp3A-bpvnlypKHfxq9Ky662gos8aPMhswSawaUj1IjuM8fgewytYhHA0NoRs0HkgkNeGM195uV3Bl6SQ2F0YqOy0ZDPqvJc10HSfzqfC6aBc1wQR0h-cq1jTr1hzuGm"/>
+</div>
+<div class="md:col-span-2 p-8 flex flex-col justify-between bg-white">
+<div>
+<div class="flex justify-between items-start mb-6">
+<h2 class="font-headline font-black text-4xl lg:text-5xl uppercase tracking-tighter leading-none">ВЕБ-ДИЗАЙН</h2>
+<span class="font-label font-bold bg-primary-container text-black border-2 border-black px-2 py-1 text-xs">HOT</span>
+</div>
+<p class="font-body text-base lg:text-lg font-bold uppercase mb-8">МНОГОФУНКЦИОНАЛЬНАЯ ПЛАТФОРМА ДЛЯ АРТ-ГАЛЕРЕИ В СТИЛЕ ЦИФРОВОГО ХАОСА.</p>
+</div>
+<button class="w-full py-4 bg-black text-white font-headline font-black text-xl uppercase tracking-widest hover:bg-primary-container hover:text-black transition-colors border-2 border-black">
+                            ОТКРЫТЬ ПРОЕКТ
+                        </button>
+</div>
+</div>
+</article>
+<!-- Case 3: UI/UX -->
+<article class="group relative bg-white border-[4px] border-black hard-shadow transition-all hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[16px_16px_0px_0px_#000000]">
+<div class="aspect-square bg-surface-container-high border-b-[4px] border-black overflow-hidden">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="mobile app interface layout with oversized buttons and raw industrial typography against a concrete grey background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDES8G2Jy4AKUY5vOGbJSItIYOoTrtSNyBLOCy4No5-U_w_h2lcolf6GXRbFzPyICFoJpuGhwYMed12cfIF-L73yEl30W3iTnx0gewrWFSK5Oqktln_4btWWVhMuz4x02QNdBP9CNsJIv4d7_V0x-arcchjIKyppViaOiiGpa0WVPSCt1P2LBAI4LCYZcu8fVVlOocP-nnEhtOQeRPYwfRBrQ2XEYAVdYFnLDy4BW2mL8kXFCvkVLx0Gq6HMSVLH-ObyUuwhwbbryCp"/>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<h2 class="font-headline font-black text-3xl uppercase tracking-tighter leading-none">ИНТЕРФЕЙСЫ</h2>
+<span class="font-label font-bold bg-black text-white px-2 py-1 text-xs">2023</span>
+</div>
+<p class="font-body text-sm font-bold uppercase mb-6 opacity-70">ПРОЕКТИРОВАНИЕ МОБИЛЬНОГО ПРИЛОЖЕНИЯ ДЛЯ УПРАВЛЕНИЯ КРИПТО-АКТИВАМИ.</p>
+<div class="flex items-center gap-2 font-black text-black group-hover:text-primary-dim transition-colors">
+                        СМОТРЕТЬ КЕЙС <span class="material-symbols-outlined">arrow_right_alt</span>
+</div>
+</div>
+</article>
+<!-- Case 4: Typography -->
+<article class="group relative bg-black text-white border-[4px] border-black hard-shadow transition-all hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[16px_16px_0px_0px_#ffd709]">
+<div class="aspect-square bg-zinc-800 border-b-[4px] border-yellow-400 overflow-hidden flex items-center justify-center p-8">
+<span class="font-headline font-black text-[12rem] text-primary-container leading-none">A</span>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<h2 class="font-headline font-black text-3xl uppercase tracking-tighter leading-none">ШРИФТЫ</h2>
+<span class="font-label font-bold bg-primary-container text-black px-2 py-1 text-xs">NEW</span>
+</div>
+<p class="font-body text-sm font-bold uppercase mb-6 opacity-70">ЭКСПЕРИМЕНТАЛЬНЫЙ АКЦИДЕНТНЫЙ ШРИФТ "BRUTAL-SANS-24".</p>
+<div class="flex items-center gap-2 font-black text-primary-container group-hover:text-white transition-colors">
+                        СКАЧАТЬ <span class="material-symbols-outlined">download</span>
+</div>
+</div>
+</article>
+<!-- Case 5: 3D Render -->
+<article class="group relative bg-white border-[4px] border-black hard-shadow transition-all hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[16px_16px_0px_0px_#000000]">
+<div class="aspect-square bg-surface-container-high border-b-[4px] border-black overflow-hidden">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="abstract 3d composition of metallic geometric shapes floating in a yellow void with sharp shadows and grain texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMXckCS4mnh4TQU0HV463sj3qT-JAjFEhAUF8Cnou-3fyQQShEnqJIuqwt60tjMzghHpI5VkQM3O_53EuckOGOvLRnVWorKduRBYxucmL8u-lSJ7KPQPfV7UwCiFWedI0fo4n8VyeDW2w7y4dSFMTC4QhMUum1Kjb2SE7XyIjafhBqa4zILIVa8NxRB7ok1XLtDAwXK7pgtEVb6AeJ6UHjt3GnV9nADf393UJh2AKbejZsLrUFakfMkg8hSfqtIBuUKvEJLBm5OZ2f"/>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<h2 class="font-headline font-black text-3xl uppercase tracking-tighter leading-none">3D-ГРАФИКА</h2>
+<span class="font-label font-bold bg-black text-white px-2 py-1 text-xs">2024</span>
+</div>
+<p class="font-body text-sm font-bold uppercase mb-6 opacity-70">СЕРИЯ АБСТРАКТНЫХ РЕНДЕРОВ ДЛЯ МУЗЫКАЛЬНОГО ЛЕЙБЛА "RAW".</p>
+<div class="flex items-center gap-2 font-black text-black group-hover:text-primary-dim transition-colors">
+                        СМОТРЕТЬ КЕЙС <span class="material-symbols-outlined">arrow_right_alt</span>
+</div>
+</div>
+</article>
+</section>
+<!-- CTA Section -->
+<section class="bg-primary-container border-y-[4px] border-black py-24 px-6 md:px-12 text-center">
+<h2 class="font-headline font-black text-5xl md:text-8xl uppercase tracking-tighter mb-12">
+                ЕСТЬ ПРОЕКТ ДЛЯ МЕНЯ?
+            </h2>
+<div class="flex flex-col md:flex-row gap-8 justify-center items-center">
+<a class="bg-black text-white px-12 py-6 font-headline font-black text-2xl uppercase tracking-widest hard-shadow-sm hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all border-4 border-black" href="mailto:hello@archive24.ru">
+                    НАПИСАТЬ EMAIL
+                </a>
+<a class="bg-white text-black px-12 py-6 font-headline font-black text-2xl uppercase tracking-widest hard-shadow-sm hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all border-4 border-black" href="#">
+                    ТЕЛЕГРАМ
+                </a>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-stone-100 dark:bg-stone-900 full-width border-t-[4px] border-black dark:border-yellow-400">
+<div class="w-full flex flex-col md:flex-row justify-between items-start md:items-center px-6 py-12 md:px-12 gap-8">
+<div class="flex flex-col gap-4">
+<div class="text-4xl font-black text-black dark:text-white font-headline uppercase tracking-tighter">АРХИВ-24</div>
+<div class="font-['Space_Grotesk'] font-bold uppercase text-sm tracking-widest text-black dark:text-white">
+                    © 2024 ЦИФРОВОЙ МАНИФЕСТ. ВСЕ ПРАВА ЗАЩИЩЕНЫ.
+                </div>
+</div>
+<div class="flex flex-wrap gap-8 font-['Space_Grotesk'] font-bold uppercase text-sm tracking-widest">
+<a class="text-black dark:text-white hover:italic transition-all hover:scale-105" href="#">TELEGRAM</a>
+<a class="text-black dark:text-white hover:italic transition-all hover:scale-105" href="#">BEHANCE</a>
+<a class="text-black dark:text-white hover:italic transition-all hover:scale-105" href="#">DRIBBBLE</a>
+<a class="text-black dark:text-white hover:italic transition-all hover:scale-105" href="#">EMAIL</a>
+</div>
+</div>
+</footer>
+<!-- Brutalist Grid Decorative Elements -->
+<div class="fixed top-0 left-12 w-[1px] h-full bg-black/10 pointer-events-none hidden lg:block"></div>
+<div class="fixed top-0 right-12 w-[1px] h-full bg-black/10 pointer-events-none hidden lg:block"></div>
+</body></html>

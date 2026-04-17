@@ -1,0 +1,414 @@
+/* Premium About Page */
+.main {
+  min-height: 100vh;
+  background: var(--color-black);
+  padding-top: 6rem;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Content Grid - Asymmetric Layout */
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4rem;
+  padding: 4rem 0;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .contentGrid {
+    grid-template-columns: 7fr 5fr;
+    gap: 6rem;
+    padding: 6rem 0;
+  }
+}
+
+/* Biography Section */
+.biographySection {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.heroTitle {
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--color-white);
+  margin-bottom: 2rem;
+}
+
+.accentText {
+  background: linear-gradient(135deg, #C9A96E 0%, #E5C158 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.biographyContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.biographyTextLarge {
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: var(--color-white);
+}
+
+.biographyText {
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.7;
+  color: var(--color-gray-light);
+}
+
+/* Portrait Section */
+.portraitSection {
+  position: relative;
+}
+
+.portraitWrapper {
+  position: sticky;
+  top: 120px;
+}
+
+.portraitContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  background: var(--color-dark-secondary);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.portraitContainer:hover {
+  transform: translateY(-8px);
+  border-color: rgba(201, 169, 110, 0.4);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4), 0 8px 32px rgba(201, 169, 110, 0.2);
+}
+
+.imageSkeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(26, 26, 26, 0.8) 0%,
+    rgba(42, 42, 42, 0.8) 50%,
+    rgba(26, 26, 26, 0.8) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.portraitImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: grayscale(0.2);
+}
+
+.imageLoading {
+  opacity: 0;
+}
+
+.imageLoaded {
+  opacity: 1;
+}
+
+.portraitContainer:hover .portraitImage {
+  transform: scale(1.05);
+  filter: grayscale(0);
+}
+
+.portraitOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem;
+  background: linear-gradient(to top, rgba(11, 11, 11, 0.95) 0%, transparent 100%);
+  transform: translateY(100%);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.portraitContainer:hover .portraitOverlay {
+  transform: translateY(0);
+}
+
+.overlayName {
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+.overlayTitle {
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: rgba(201, 169, 110, 0.8);
+}
+
+/* Skills Section */
+.skillsSection {
+  padding: 8rem 0;
+  border-top: 1px solid rgba(201, 169, 110, 0.1);
+}
+
+.sectionTitle {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--color-white);
+  margin-bottom: 4rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.iconBox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+  background: var(--color-gold);
+  border-radius: 8px;
+  color: var(--color-black);
+}
+
+.iconBox .material-symbols-outlined {
+  font-size: 0.7em;
+  font-weight: 900;
+}
+
+.skillsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .skillsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .skillsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* CTA Section */
+.ctaSection {
+  padding: 4rem 0 8rem;
+}
+
+.ctaGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .ctaGrid {
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+  }
+}
+
+.ctaCard {
+  position: relative;
+  padding: 4rem;
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(42, 42, 42, 0.4) 100%);
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 3rem;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ctaCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(201, 169, 110, 0.08) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.ctaCard:hover {
+  transform: translateY(-8px);
+  border-color: rgba(201, 169, 110, 0.4);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 8px 32px rgba(201, 169, 110, 0.2);
+}
+
+.ctaCard:hover::before {
+  opacity: 1;
+}
+
+.ctaTitle {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-white);
+  margin-bottom: 1rem;
+}
+
+.ctaDescription {
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--color-gray-light);
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ctaButton {
+  padding: 1rem 2rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: none;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.ctaButton.primary {
+  background: var(--color-gold);
+  color: var(--color-black);
+  box-shadow: 0 4px 16px rgba(201, 169, 110, 0.3);
+}
+
+.ctaButton.primary:hover {
+  background: var(--color-gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201, 169, 110, 0.4);
+}
+
+.ctaButton.secondary {
+  background: transparent;
+  color: var(--color-white);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ctaButton.secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+/* Stats Card */
+.statsCard {
+  position: relative;
+  padding: 4rem;
+  background: linear-gradient(135deg, rgba(201, 169, 110, 0.15) 0%, rgba(42, 42, 42, 0.6) 100%);
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.statsCard:hover {
+  transform: translateY(-8px);
+  border-color: var(--color-gold);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 8px 32px rgba(201, 169, 110, 0.3);
+}
+
+.statsNumber {
+  font-size: clamp(4rem, 8vw, 6rem);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--color-gold);
+  margin-bottom: 1rem;
+}
+
+.statsLabel {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-white);
+}
+
+/* Responsive */
+@media (max-width: 1023px) {
+  .main {
+    padding-top: 4rem;
+  }
+  
+  .container {
+    padding: 0 1.5rem;
+  }
+  
+  .contentGrid {
+    padding: 3rem 0;
+  }
+  
+  .portraitWrapper {
+    position: relative;
+    top: 0;
+  }
+  
+  .skillsSection {
+    padding: 6rem 0;
+  }
+  
+  .ctaSection {
+    padding: 3rem 0 6rem;
+  }
+  
+  .ctaCard,
+  .statsCard {
+    padding: 3rem 2rem;
+  }
+}

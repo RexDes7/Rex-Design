@@ -1,0 +1,210 @@
+/* Premium Navigation */
+.navigation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 1.5rem 2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(11, 11, 11, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(201, 169, 110, 0.1);
+}
+
+.container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo */
+.logo {
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--color-white);
+  transition: color 0.3s ease;
+  z-index: 1001;
+}
+
+.logo:hover {
+  color: var(--color-gold);
+}
+
+/* Desktop Navigation Links */
+.navLinks {
+  display: none;
+  align-items: center;
+  gap: 3rem;
+}
+
+@media (min-width: 768px) {
+  .navLinks {
+    display: flex;
+  }
+}
+
+.navLink {
+  position: relative;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-gray-light);
+  transition: color 0.3s ease;
+  letter-spacing: 0.02em;
+}
+
+.navLink:hover {
+  color: var(--color-white);
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-gold);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navLink:hover::after,
+.navLink.active::after {
+  width: 100%;
+}
+
+.navLink.active {
+  color: var(--color-white);
+}
+
+/* CTA Button */
+.ctaButton {
+  display: none;
+  padding: 0.75rem 1.5rem;
+  background: var(--color-gold);
+  color: var(--color-black);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(201, 169, 110, 0.2);
+}
+
+@media (min-width: 768px) {
+  .ctaButton {
+    display: inline-block;
+  }
+}
+
+.ctaButton:hover {
+  background: var(--color-gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(201, 169, 110, 0.3);
+}
+
+/* Mobile Hamburger */
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 28px;
+  height: 24px;
+  cursor: pointer;
+  z-index: 1001;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .hamburger {
+    display: none;
+  }
+}
+
+.hamburgerLine {
+  width: 100%;
+  height: 2px;
+  background: var(--color-white);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 2px;
+}
+
+/* Mobile Menu Open State */
+.navLinksOpen {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(11, 11, 11, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  z-index: 1000;
+}
+
+@media (min-width: 768px) {
+  .navLinksOpen {
+    position: static;
+    width: auto;
+    height: auto;
+    background: none;
+    backdrop-filter: none;
+    flex-direction: row;
+    gap: 3rem;
+  }
+}
+
+.navLinksOpen .navLink {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-white);
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 768px) {
+  .navLinksOpen .navLink {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+}
+
+.navLinksOpen .navLink:hover {
+  color: var(--color-gold);
+}
+
+/* Hamburger Animation when Open */
+.hamburger:has(~ .navLinksOpen) .hamburgerLine:nth-child(1),
+.navLinksOpen ~ .hamburger .hamburgerLine:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger:has(~ .navLinksOpen) .hamburgerLine:nth-child(2),
+.navLinksOpen ~ .hamburger .hamburgerLine:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger:has(~ .navLinksOpen) .hamburgerLine:nth-child(3),
+.navLinksOpen ~ .hamburger .hamburgerLine:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .navigation {
+    padding: 1rem 1.5rem;
+  }
+  
+  .logo {
+    font-size: 1.25rem;
+  }
+}

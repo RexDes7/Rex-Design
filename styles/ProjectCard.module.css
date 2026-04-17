@@ -1,0 +1,251 @@
+/* Premium Project Card */
+.projectCard {
+  position: relative;
+  height: 500px;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--color-dark-secondary);
+  border: 1px solid rgba(201, 169, 110, 0.1);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 768px) {
+  .projectCard {
+    height: 600px;
+  }
+}
+
+.projectCard:hover {
+  transform: translateY(-8px);
+  border-color: rgba(201, 169, 110, 0.3);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4), 0 8px 32px rgba(201, 169, 110, 0.2);
+}
+
+/* Image Container */
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-dark-secondary);
+}
+
+.imageSkeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(26, 26, 26, 0.8) 0%,
+    rgba(42, 42, 42, 0.8) 50%,
+    rgba(26, 26, 26, 0.8) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.projectImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: grayscale(0.3) brightness(0.8);
+}
+
+.imageLoading {
+  opacity: 0;
+}
+
+.imageLoaded {
+  opacity: 1;
+}
+
+.projectCard:hover .projectImage {
+  transform: scale(1.08);
+  filter: grayscale(0) brightness(1);
+}
+
+/* Overlay */
+.imageContainer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(11, 11, 11, 0) 0%,
+    rgba(11, 11, 11, 0.4) 50%,
+    rgba(11, 11, 11, 0.95) 100%
+  );
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.projectCard:hover .imageContainer::after {
+  background: linear-gradient(
+    to bottom,
+    rgba(11, 11, 11, 0.2) 0%,
+    rgba(11, 11, 11, 0.6) 50%,
+    rgba(11, 11, 11, 0.98) 100%
+  );
+}
+
+/* Content */
+.content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2.5rem;
+  z-index: 10;
+  transform: translateY(0);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.projectCard:hover .content {
+  transform: translateY(-10px);
+}
+
+/* Title */
+.title {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--color-white);
+  margin-bottom: 0.75rem;
+  transition: color 0.3s ease;
+}
+
+.projectCard:hover .title {
+  color: var(--color-gold-light);
+}
+
+/* Description */
+.description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-gray-light);
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.projectCard:hover .description {
+  opacity: 1;
+}
+
+/* Metadata */
+.metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.badge {
+  padding: 0.5rem 1rem;
+  background: rgba(201, 169, 110, 0.15);
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.projectCard:hover .badge {
+  background: rgba(201, 169, 110, 0.25);
+  border-color: var(--color-gold);
+}
+
+/* Glow Effect on Hover */
+.projectCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at center,
+    rgba(201, 169, 110, 0.15) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.projectCard:hover::before {
+  opacity: 1;
+}
+
+/* Featured Card (larger) */
+.featured {
+  height: 600px;
+}
+
+@media (min-width: 768px) {
+  .featured {
+    height: 700px;
+  }
+}
+
+.featured .title {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.featured .description {
+  font-size: 1.125rem;
+}
+
+/* Wide Variant */
+.wide {
+  grid-column: span 2;
+}
+
+/* Dark Variant */
+.dark {
+  background: var(--color-black);
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .projectCard {
+    height: 450px;
+  }
+  
+  .content {
+    padding: 2rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+  
+  .description {
+    font-size: 0.9375rem;
+  }
+  
+  .wide {
+    grid-column: span 1;
+  }
+}

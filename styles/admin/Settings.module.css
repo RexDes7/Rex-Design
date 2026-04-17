@@ -1,0 +1,263 @@
+/* Premium Admin Settings */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  color: var(--color-white);
+  margin-bottom: 2rem;
+  letter-spacing: -0.02em;
+}
+
+/* Settings Sections */
+.settingsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.settingSection {
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(42, 42, 42, 0.4) 100%);
+  border: 1px solid rgba(201, 169, 110, 0.1);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.settingSection:hover {
+  border-color: rgba(201, 169, 110, 0.2);
+}
+
+.sectionHeader {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: 0.5rem;
+}
+
+.sectionDescription {
+  font-size: 0.9375rem;
+  color: var(--color-gray-light);
+}
+
+.settingItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.settingItem:last-child {
+  border-bottom: none;
+}
+
+.settingInfo {
+  flex: 1;
+}
+
+.settingLabel {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-white);
+  margin-bottom: 0.25rem;
+}
+
+.settingHelp {
+  font-size: 0.875rem;
+  color: var(--color-gray);
+}
+
+.settingAction {
+  margin-left: 1rem;
+}
+
+/* Buttons */
+.button {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.buttonPrimary {
+  background: var(--color-gold);
+  color: var(--color-black);
+  box-shadow: 0 4px 16px rgba(201, 169, 110, 0.3);
+}
+
+.buttonPrimary:hover:not(:disabled) {
+  background: var(--color-gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201, 169, 110, 0.4);
+}
+
+.buttonSecondary {
+  background: transparent;
+  color: var(--color-white);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.buttonSecondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.buttonDanger {
+  background: rgba(255, 68, 68, 0.1);
+  color: #ff6666;
+  border: 1px solid rgba(255, 68, 68, 0.3);
+}
+
+.buttonDanger:hover {
+  background: rgba(255, 68, 68, 0.2);
+  border-color: #ff6666;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Backup List */
+.backupList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.backupItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(11, 11, 11, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.backupItem:hover {
+  background: rgba(26, 26, 26, 0.8);
+  border-color: rgba(201, 169, 110, 0.2);
+}
+
+.backupInfo {
+  flex: 1;
+}
+
+.backupName {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-white);
+  margin-bottom: 0.25rem;
+}
+
+.backupDate {
+  font-size: 0.8125rem;
+  color: var(--color-gray);
+}
+
+.backupActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.iconButton {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: var(--color-white);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.iconButton:hover {
+  background: rgba(201, 169, 110, 0.1);
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.iconButton.danger:hover {
+  background: rgba(255, 68, 68, 0.1);
+  border-color: #ff6666;
+  color: #ff6666;
+}
+
+/* Messages */
+.message {
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.messageSuccess {
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  color: #4ade80;
+}
+
+.messageError {
+  background: rgba(255, 68, 68, 0.1);
+  border: 1px solid rgba(255, 68, 68, 0.3);
+  color: #ff6666;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .container {
+    padding: 0;
+  }
+  
+  .settingSection {
+    padding: 1.5rem;
+  }
+  
+  .settingItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .settingAction {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .button {
+    width: 100%;
+  }
+  
+  .backupItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .backupActions {
+    width: 100%;
+  }
+}

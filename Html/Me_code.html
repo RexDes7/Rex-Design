@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "error-dim": "#b92902",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed-variant": "#6c6d6e",
+              "on-primary-fixed": "#453900",
+              "tertiary-fixed": "#ffffff",
+              "error-container": "#f95630",
+              "on-surface-variant": "#5a5c5c",
+              "tertiary": "#5a5c5c",
+              "primary-fixed": "#ffd709",
+              "on-tertiary": "#f2f3f3",
+              "tertiary-fixed-dim": "#f0f1f1",
+              "tertiary-dim": "#4e5050",
+              "outline-variant": "#acadad",
+              "primary-container": "#ffd709",
+              "background": "#f6f6f6",
+              "on-surface": "#2d2f2f",
+              "surface": "#f6f6f6",
+              "surface-container-high": "#e1e3e3",
+              "on-error-container": "#520c00",
+              "error": "#b02500",
+              "primary-dim": "#5e4e00",
+              "inverse-primary": "#ffd709",
+              "surface-bright": "#f6f6f6",
+              "on-secondary-fixed-variant": "#5b5b5b",
+              "outline": "#757777",
+              "surface-container": "#e7e8e8",
+              "on-background": "#2d2f2f",
+              "on-tertiary-fixed": "#4f5051",
+              "inverse-on-surface": "#9c9d9d",
+              "primary-fixed-dim": "#efc900",
+              "surface-dim": "#d2d5d5",
+              "surface-container-highest": "#dbdddd",
+              "on-primary": "#fff2cd",
+              "surface-tint": "#6c5a00",
+              "primary": "#6c5a00",
+              "tertiary-container": "#ffffff",
+              "on-secondary-fixed": "#3f3f3f",
+              "on-secondary-container": "#525252",
+              "surface-container-low": "#f0f1f1",
+              "secondary-fixed-dim": "#d4d4d4",
+              "inverse-surface": "#0c0f0f",
+              "secondary-container": "#e2e2e2",
+              "on-error": "#ffefec",
+              "on-secondary": "#f3f3f3",
+              "secondary": "#5b5b5b",
+              "on-primary-container": "#5b4b00",
+              "on-primary-fixed-variant": "#665500",
+              "secondary-dim": "#4f4f4f",
+              "on-tertiary-container": "#616263",
+              "surface-variant": "#dbdddd",
+              "secondary-fixed": "#e2e2e2"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Space Grotesk"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .hard-shadow {
+        box-shadow: 8px 8px 0px 0px #000000;
+      }
+      .hard-shadow-sm {
+        box-shadow: 4px 4px 0px 0px #000000;
+      }
+      .text-outline {
+        -webkit-text-stroke: 1px black;
+        color: transparent;
+      }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body overflow-x-hidden selection:bg-primary-container selection:text-black">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-white border-b-[4px] border-black">
+<nav class="flex justify-between items-center w-full px-6 py-4 md:px-12">
+<div class="text-3xl font-black text-black uppercase tracking-[-0.05em] font-headline">
+                АРХИВ-24
+            </div>
+<div class="hidden md:flex gap-12 items-center">
+<a class="font-headline font-black uppercase tracking-tighter text-xl text-black/60 hover:bg-yellow-400 hover:text-black transition-colors duration-100 px-2" href="#">ПОРТФОЛИО</a>
+<a class="font-headline font-black uppercase tracking-tighter text-xl text-black underline decoration-[4px] underline-offset-8" href="#">ОБО МНЕ</a>
+<a class="font-headline font-black uppercase tracking-tighter text-xl text-black/60 hover:bg-yellow-400 hover:text-black transition-colors duration-100 px-2" href="#">КОНТАКТЫ</a>
+</div>
+<button class="bg-primary-container text-black font-headline font-black uppercase tracking-tighter text-xl px-6 py-2 border-[3px] border-black hard-shadow-sm active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+                ЗАКАЗАТЬ
+            </button>
+</nav>
+</header>
+<main class="pt-32 pb-24 px-6 md:px-12 max-w-7xl mx-auto">
+<!-- Hero Section: Asymmetric Bio & Portrait -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+<div class="lg:col-span-7 order-2 lg:order-1">
+<h1 class="font-headline font-black text-6xl md:text-8xl lg:text-9xl uppercase leading-[0.85] tracking-tighter mb-12">
+                    ДИЗАЙН <br/>
+<span class="bg-primary-container text-black inline-block px-4 rotate-[-1deg]">КАК ОРУЖИЕ</span> <br/>
+                    МЫСЛИ.
+                </h1>
+<div class="space-y-8 max-w-2xl">
+<p class="text-2xl md:text-3xl font-bold uppercase leading-tight">
+                        Я — МУЛЬТИДИСЦИПЛИНАРНЫЙ ДИЗАЙНЕР, КОТОРЫЙ ВЕРИТ В СЫРУЮ ЭСТЕТИКУ И ФУНКЦИОНАЛЬНУЮ ЧЕСТНОСТЬ. МОЯ РАБОТА — ЭТО МАНИФЕСТ ПРОТИВ СКУКИ И СРЕДНЕГО УРОВНЯ.
+                    </p>
+<p class="text-lg md:text-xl font-medium text-on-surface/80 leading-relaxed">
+                        С 2018 года я создаю визуальные системы, которые заставляют людей остановиться. Мой подход сочетает в себе швейцарскую точность и брутальный хаос. Я не просто рисую пиксели; я проектирую опыт, который вызывает эмоции и решает задачи бизнеса через радикальный визуальный язык.
+                    </p>
+</div>
+</div>
+<!-- Huge Portrait Placeholder -->
+<div class="lg:col-span-5 order-1 lg:order-2 sticky top-40">
+<div class="relative group">
+<div class="absolute inset-0 bg-primary-container translate-x-4 translate-y-4 -z-10 border-[4px] border-black"></div>
+<div class="aspect-[4/5] bg-surface-container-high border-[4px] border-black overflow-hidden relative">
+<img alt="Portrait of a designer" class="w-full h-full object-cover grayscale contrast-125 brightness-90 group-hover:grayscale-0 transition-all duration-500" data-alt="Intense close-up portrait of a creative professional with focused expression, high contrast black and white lighting, urban industrial background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCh1QXg0uMDdq6nq0JzzzOagSygXKfOYuEWoPEPkzOVKsxki32mZf7R8lUFoBTTuLaCSd0lRTWxJJMPUY-_-uDe_fcBbk1jHIs5P5j1BC7-tubzpSKpJw2FOCN4yst1C13sbHEXXTqkb0_STnZdX9rwpEswkY1MZAs8PO1QZnIdO_E8NIheMtCJ4engYkJOvw-M7ajN3wo3xPNC-MPmyrtPmJBP9HO9NLclahYcriKZK7A8yLaR1uLbY44U8IF3qgXH1lCKGiIY4HYB"/>
+<div class="absolute bottom-4 left-4 bg-black text-white px-4 py-1 font-headline font-black text-xl uppercase italic">
+                            FOUNDER / ARCHIVE-24
+                        </div>
+</div>
+</div>
+</div>
+</section>
+<!-- Skill Section: Grid of Boxes -->
+<section class="mt-40">
+<h2 class="font-headline font-black text-4xl md:text-6xl uppercase tracking-tighter mb-12 flex items-center gap-4">
+<span class="w-12 h-12 bg-black text-white flex items-center justify-center">
+<span class="material-symbols-outlined text-4xl">bolt</span>
+</span>
+                АРСЕНАЛ НАВЫКОВ
+            </h2>
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-0 border-[2px] border-black">
+<!-- Skill Item -->
+<div class="border-[2px] border-black p-8 group hover:bg-primary-container transition-colors cursor-default">
+<span class="block font-headline font-black text-4xl mb-4 group-hover:scale-110 transition-transform origin-left">FIGMA</span>
+<p class="font-label text-sm uppercase opacity-60">UI/UX Systems &amp; Prototyping</p>
+</div>
+<!-- Skill Item -->
+<div class="border-[2px] border-black p-8 bg-black text-white group hover:bg-white hover:text-black transition-colors cursor-default">
+<span class="block font-headline font-black text-4xl mb-4 group-hover:scale-110 transition-transform origin-left">MOTION</span>
+<p class="font-label text-sm uppercase opacity-60">After Effects &amp; Lottie</p>
+</div>
+<!-- Skill Item -->
+<div class="border-[2px] border-black p-8 group hover:bg-primary-container transition-colors cursor-default">
+<span class="block font-headline font-black text-4xl mb-4 group-hover:scale-110 transition-transform origin-left">RESEARCH</span>
+<p class="font-label text-sm uppercase opacity-60">UX Audit &amp; User Testing</p>
+</div>
+<!-- Skill Item -->
+<div class="border-[2px] border-black p-8 group hover:bg-primary-container transition-colors cursor-default">
+<span class="block font-headline font-black text-4xl mb-4 group-hover:scale-110 transition-transform origin-left">WEBFLOW</span>
+<p class="font-label text-sm uppercase opacity-60">No-code Development</p>
+</div>
+<!-- Skill Item -->
+<div class="border-[2px] border-black p-8 group hover:bg-primary-container transition-colors cursor-default">
+<span class="block font-headline font-black text-4xl mb-4 group-hover:scale-110 transition-transform origin-left">BRANDING</span>
+<p class="font-label text-sm uppercase opacity-60">Identity &amp; Typography</p>
+</div>
+</div>
+</section>
+<!-- Projects Bento Grid Teaser -->
+<section class="mt-40 grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="md:col-span-2 bg-surface-container-highest border-[4px] border-black p-12 hard-shadow flex flex-col justify-between min-h-[400px]">
+<div>
+<h3 class="font-headline font-black text-5xl uppercase tracking-tighter mb-4">ЕСТЬ ИДЕЯ?</h3>
+<p class="text-2xl font-bold uppercase max-w-md">ДАВАЙТЕ ПРЕВРАТИМ ЕЕ В ВИЗУАЛЬНЫЙ МАНИФЕСТ, КОТОРЫЙ НЕВОЗМОЖНО ИГНОРИРОВАТЬ.</p>
+</div>
+<div class="flex flex-wrap gap-4 mt-8">
+<button class="bg-black text-white font-headline font-black uppercase text-xl px-8 py-4 border-[3px] border-black hover:bg-white hover:text-black transition-all">ОБСУДИТЬ ПРОЕКТ</button>
+<button class="bg-white text-black font-headline font-black uppercase text-xl px-8 py-4 border-[3px] border-black hover:bg-primary-container transition-all">СКАЧАТЬ CV</button>
+</div>
+</div>
+<div class="bg-primary-container border-[4px] border-black p-8 flex flex-col items-center justify-center text-center hard-shadow relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+<div class="text-9xl font-black text-black leading-none rotate-12 -translate-x-10 translate-y-10 uppercase">CREATIVE</div>
+</div>
+<div class="z-10">
+<div class="text-8xl font-black mb-2">50+</div>
+<div class="font-headline font-black text-2xl uppercase tracking-widest">ПРОЕКТОВ</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-stone-100 border-t-[4px] border-black w-full flex flex-col md:flex-row justify-between items-start md:items-center px-6 py-12 md:px-12 gap-8">
+<div>
+<div class="text-4xl font-black text-black uppercase mb-4">АРХИВ-24</div>
+<p class="font-['Space_Grotesk'] font-bold uppercase text-sm tracking-widest text-black/60">
+                © 2024 ЦИФРОВОЙ МАНИФЕСТ. ВСЕ ПРАВА ЗАЩИЩЕНЫ.
+            </p>
+</div>
+<div class="flex flex-wrap gap-8">
+<a class="font-['Space_Grotesk'] font-bold uppercase text-sm tracking-widest text-black hover:italic hover:scale-105 transition-all" href="#">TELEGRAM</a>
+<a class="font-['Space_Grotesk'] font-bold uppercase text-sm tracking-widest text-black hover:italic hover:scale-105 transition-all" href="#">BEHANCE</a>
+<a class="font-['Space_Grotesk'] font-bold uppercase text-sm tracking-widest text-black hover:italic hover:scale-105 transition-all" href="#">DRIBBBLE</a>
+<a class="font-['Space_Grotesk'] font-bold uppercase text-sm tracking-widest text-black hover:italic hover:scale-105 transition-all" href="#">EMAIL</a>
+</div>
+</footer>
+</body></html>

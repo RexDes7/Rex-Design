@@ -1,0 +1,241 @@
+'use client'
+
+import { useState, FormEvent, ChangeEvent } from 'react'
+import styles from '@/styles/ContactForm.module.css'
+import { ContactFormData } from '@/types/form'
+import { trackFormSubmission } from '@/components/AnalyticsTracker'
+
+interface ContactFormProps {
+  onSubmit?: (data: ContactFormData) => void
+}
+
+interface ValidationErrors {
+  name?: string
+  contact?: string
+  budget?: string
+  description?: string
+}
+
+export default function ContactForm({ onSubmit }: ContactFormProps) {
+  const [formData, setFormData] = useState<ContactFormData>({
+    name: '',
+    contact: '',
+    budget: '100К-300К',
+    description: '',
+  })
+
+  const [errors, setErrors] = useState<ValidationErrors>({})
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
+  const validateField = (name: keyof ContactFormData, value: string): string | undefined => {
+    switch (name) {
+      case 'name':
+        if (!value.trim()) return 'Имя обязательно'
+        break
+      case 'contact':
+        if (!value.trim()) return 'Контакт обязателен'
+        // Check if it's an email (not Telegram handle starting with @)
+        if (!value.startsWith('@') && !validateEmail(value)) {
+          return 'Введите корректный email или Telegram (@username)'
+        }
+        break
+      case 'description':
+        if (!value.trim()) return 'Описание проекта обязательно'
+        if (value.length > 1000) return 'Описание не должно превышать 1000 символов'
+        break
+    }
+    return undefined
+  }
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+
+    // Validate on change if field was touched
+    if (touched[name]) {
+      const error = validateField(name as keyof ContactFormData, value)
+      setErrors((prev) => ({ ...prev, [name]: error }))
+    }
+  }
+
+  const handleBlur = (name: string) => {
+    setTouched((prev) => ({ ...prev, [name]: true }))
+    const value = formData[name as keyof ContactFormData]
+    const error = validateField(name as keyof ContactFormData, value)
+    setErrors((prev) => ({ ...prev, [name]: error }))
+  }
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    // Validate all fields
+    const newErrors: ValidationErrors = {}
+    Object.keys(formData).forEach((key) => {
+      const error = validateField(
+        key as keyof ContactFormData,
+        formData[key as keyof ContactFormData]
+      )
+      if (error) newErrors[key as keyof ValidationErrors] = error
+    })
+
+    setErrors(newErrors)
+    setTouched({
+      name: true,
+      contact: true,
+      budget: true,
+      description: true,
+    })
+
+    // If no errors, submit
+    if (Object.keys(newErrors).length === 0) {
+      setIsSubmitting(true)
+      setSubmitMessage(null)
+
+      try {
+        // Track form submission
+        trackFormSubmission(
+          'contact-form',
+          formData.name,
+          formData.contact,
+          formData.description
+        );
+
+        // Send to API
+        const response = await fetch('/api/contacts', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.contact,
+            message: `Budget: ${formData.budget}\n\n${formData.description}`
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          setSubmitMessage({ type: 'success', text: 'Сообщение отправлено! Мы свяжемся с вами в ближайшее время.' });
+          
+          // Reset form
+          setFormData({
+            name: '',
+            contact: '',
+            budget: '100К-300К',
+            description: '',
+          })
+          setTouched({})
+          
+          if (onSubmit) {
+            onSubmit(formData)
+          }
+        } else {
+          setSubmitMessage({ type: 'error', text: data.error || 'Ошибка отправки. Попробуйте позже.' });
+        }
+      } catch (error) {
+        console.error('Form submission error:', error);
+        setSubmitMessage({ type: 'error', text: 'Ошибка отправки. Проверьте подключение к интернету.' });
+      } finally {
+        setIsSubmitting(false)
+      }
+    }
+  }
+
+  return (
+    <form className={styles.form} onSubmit={handleSubmit}>
+      {submitMessage && (
+        <div className={`${styles.message} ${submitMessage.type === 'success' ? styles.messageSuccess : styles.messageError}`}>
+          {submitMessage.text}
+        </div>
+      )}
+      
+      <div className={styles.field}>
+        <label htmlFor="name" className={styles.label}>
+          ИМЯ
+        </label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          onBlur={() => handleBlur('name')}
+          className={`${styles.input} ${errors.name && touched.name ? styles.inputError : ''}`}
+          placeholder="Ваше имя"
+        />
+        {errors.name && touched.name && (
+          <span className={styles.error}>{errors.name}</span>
+        )}
+      </div>
+
+      <div className={styles.field}>
+        <label htmlFor="contact" className={styles.label}>
+          EMAIL / TELEGRAM
+        </label>
+        <input
+          type="text"
+          id="contact"
+          name="contact"
+          value={formData.contact}
+          onChange={handleChange}
+          onBlur={() => handleBlur('contact')}
+          className={`${styles.input} ${errors.contact && touched.contact ? styles.inputError : ''}`}
+          placeholder="email@example.com или @username"
+        />
+        {errors.contact && touched.contact && (
+          <span className={styles.error}>{errors.contact}</span>
+        )}
+      </div>
+
+      <div className={styles.field}>
+        <label htmlFor="budget" className={styles.label}>
+          БЮДЖЕТ
+        </label>
+        <select
+          id="budget"
+          name="budget"
+          value={formData.budget}
+          onChange={handleChange}
+          className={styles.select}
+        >
+          <option value="100К-300К">100К-300К</option>
+          <option value="300К-700К">300К-700К</option>
+          <option value="700К+">700К+</option>
+        </select>
+      </div>
+
+      <div className={styles.field}>
+        <label htmlFor="description" className={styles.label}>
+          ОПИСАНИЕ ПРОЕКТА
+        </label>
+        <textarea
+          id="description"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          onBlur={() => handleBlur('description')}
+          className={`${styles.textarea} ${errors.description && touched.description ? styles.inputError : ''}`}
+          placeholder="Расскажите о вашем проекте..."
+          rows={6}
+        />
+        {errors.description && touched.description && (
+          <span className={styles.error}>{errors.description}</span>
+        )}
+      </div>
+
+      <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
+        {isSubmitting ? 'ОТПРАВКА...' : 'ОТПРАВИТЬ'}
+      </button>
+    </form>
+  )
+}

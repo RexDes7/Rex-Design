@@ -1,0 +1,126 @@
+/* Component Test Page Styles */
+.main {
+  min-height: 100vh;
+  background: var(--color-black);
+  padding: 4rem 2rem;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.pageTitle {
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--color-gold);
+  text-align: center;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--color-gray-light);
+  font-size: 1.125rem;
+  margin-bottom: 4rem;
+}
+
+.section {
+  margin-bottom: 6rem;
+  padding: 3rem;
+  background: rgba(26, 26, 26, 0.5);
+  border-radius: 16px;
+  border: 1px solid rgba(201, 169, 110, 0.1);
+}
+
+.sectionTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: 2rem;
+  letter-spacing: -0.01em;
+}
+
+.projectGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.skillGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.manifestoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.formContainer {
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+.checkList {
+  background: rgba(11, 11, 11, 0.8);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(201, 169, 110, 0.15);
+}
+
+.checkList h3 {
+  color: var(--color-gold);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.checkList ul {
+  list-style: none;
+  padding: 0;
+}
+
+.checkList li {
+  color: var(--color-gray-light);
+  padding: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.checkList li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--color-gold);
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 2rem 1rem;
+  }
+
+  .pageTitle {
+    font-size: 2rem;
+  }
+
+  .section {
+    padding: 2rem 1.5rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .projectGrid,
+  .skillGrid,
+  .manifestoGrid {
+    grid-template-columns: 1fr;
+  }
+}

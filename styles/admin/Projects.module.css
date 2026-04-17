@@ -1,0 +1,296 @@
+/* Premium Admin Projects Page */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.title {
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 800;
+  color: var(--color-white);
+  letter-spacing: -0.02em;
+}
+
+.createButton {
+  padding: 0.875rem 1.75rem;
+  background: var(--color-gold);
+  color: #1A1A1A;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 16px rgba(201, 169, 110, 0.3);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.createButton::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.createButton:hover {
+  background: #d4b57e;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201, 169, 110, 0.5);
+}
+
+.createButton:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Projects List */
+.projectsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.projectCard {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(18, 18, 18, 0.95) 100%);
+  border: 1px solid rgba(201, 169, 110, 0.15);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.projectCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(201, 169, 110, 0.4);
+  box-shadow: 0 8px 32px rgba(201, 169, 110, 0.2);
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(18, 18, 18, 1) 100%);
+}
+
+.projectImage {
+  position: relative;
+  width: 180px;
+  height: 120px;
+  flex-shrink: 0;
+  background: rgba(11, 11, 11, 0.8);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(201, 169, 110, 0.1);
+}
+
+.imageSkeleton {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(26, 26, 26, 0.8) 0%,
+    rgba(42, 42, 42, 0.8) 50%,
+    rgba(26, 26, 26, 0.8) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.imageLoading {
+  opacity: 0;
+}
+
+.imageLoaded {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.projectImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.projectCard:hover .projectImage img {
+  transform: scale(1.05);
+}
+
+.projectInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.projectTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.projectMeta {
+  font-size: 0.875rem;
+  color: var(--color-gold);
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+.projectDescription {
+  font-size: 0.9375rem;
+  color: var(--color-gray-light);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.projectActions {
+  display: flex;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.editButton,
+.deleteButton {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.editButton {
+  background: rgba(201, 169, 110, 0.15);
+  color: var(--color-gold);
+  border: 1px solid rgba(201, 169, 110, 0.3);
+}
+
+.editButton:hover {
+  background: rgba(201, 169, 110, 0.25);
+  border-color: var(--color-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(201, 169, 110, 0.3);
+}
+
+.deleteButton {
+  background: rgba(255, 68, 68, 0.15);
+  color: #ff6666;
+  border: 1px solid rgba(255, 68, 68, 0.3);
+}
+
+.deleteButton:hover {
+  background: rgba(255, 68, 68, 0.25);
+  border-color: #ff6666;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(255, 68, 68, 0.3);
+}
+
+/* Empty State */
+.empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(18, 18, 18, 0.9) 100%);
+  border: 1px solid rgba(201, 169, 110, 0.15);
+  border-radius: 12px;
+}
+
+.empty p {
+  font-size: 1.125rem;
+  color: var(--color-gray-light);
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .projectCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .projectImage {
+    width: 100%;
+    height: 200px;
+  }
+  
+  .projectActions {
+    width: 100%;
+  }
+  
+  .editButton,
+  .deleteButton {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding: 0;
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  
+  .title {
+    font-size: 1.75rem;
+  }
+  
+  .createButton {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .projectCard {
+    padding: 1.25rem;
+  }
+  
+  .projectActions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .editButton,
+  .deleteButton {
+    width: 100%;
+  }
+}

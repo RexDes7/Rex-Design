@@ -1,0 +1,79 @@
+/* Premium Custom Cursor */
+.cursor {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background: var(--color-gold);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  mix-blend-mode: difference;
+}
+
+/* Hover State - Expand and turn white */
+.cursor.hover {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.3);
+  border: 2px solid var(--color-white);
+  mix-blend-mode: normal;
+}
+
+/* Inverted State (on dark backgrounds) */
+.cursor.inverted {
+  background: var(--color-gold);
+  mix-blend-mode: difference;
+}
+
+.cursor.inverted.hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: var(--color-white);
+  mix-blend-mode: normal;
+}
+
+/* Trail Points */
+.trailPoint {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  background: var(--color-gold);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+}
+
+.trailPoint.inverted {
+  background: var(--color-gold);
+}
+
+/* Disable on Touch Devices */
+@media (hover: none) and (pointer: coarse) {
+  .cursor,
+  .trailPoint {
+    display: none;
+  }
+}
+
+/* Smooth Animation */
+@media (prefers-reduced-motion: no-preference) {
+  .cursor {
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .cursor,
+  .trailPoint {
+    transition: none;
+  }
+}
