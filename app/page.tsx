@@ -13,15 +13,15 @@ import { animationConfig } from '@/lib/animations/config'
 import { Project } from '@/types/project'
 import styles from './page.module.css'
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
 // Динамический импорт 3D компонента для оптимизации
 const MetallicSphere = dynamic(() => import('@/components/MetallicSphere'), {
   ssr: false,
   loading: () => null
 })
+
+// Force dynamic rendering
+export const dynamicParams = true;
+export const revalidate = 0;
 
 export default function Home() {
   const [fabBottom, setFabBottom] = useState('2rem')

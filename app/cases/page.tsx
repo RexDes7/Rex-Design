@@ -7,11 +7,11 @@ import styles from './page.module.css';
 
 import { Project } from '@/types/project';
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
 type Category = 'Все Проекты' | 'Веб-Дизайн' | 'Брендинг' | 'Типографика' | 'UI/UX';
+
+// Force dynamic rendering
+export const dynamicParams = true;
+export const revalidate = 0;
 
 export default function CasesPage() {
   const [activeFilter, setActiveFilter] = useState<Category>('Все Проекты');
