@@ -56,6 +56,7 @@ export default function Home() {
     fetch('/api/projects')
       .then(res => res.json())
       .then(data => {
+        console.log('[HOME] API Response:', data);
         if (isMounted && data.success) {
           // Normalize imageAlt field and map to Project type
           const normalizedProjects: Project[] = data.data.map((p: any) => {
@@ -82,11 +83,12 @@ export default function Home() {
               featured: p.featured
             };
           });
+          console.log('[HOME] Normalized projects:', normalizedProjects);
           setProjects(normalizedProjects);
         }
       })
       .catch(error => {
-        console.error('Failed to load projects:', error);
+        console.error('[HOME] Failed to load projects:', error);
       });
 
     // Load contacts from API
