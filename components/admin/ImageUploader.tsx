@@ -10,7 +10,6 @@
 
 import { useState, useRef, DragEvent, ChangeEvent } from 'react';
 import styles from '@/styles/admin/ImageUploader.module.css';
-import { compressImage } from '@/lib/utils/image-compression';
 
 // ============================================================================
 // Types
@@ -164,19 +163,10 @@ export default function ImageUploader({
     setError(null);
 
     try {
-      // Compress image before upload
-      console.log('[UPLOAD] Original size:', (selectedFile.size / 1024 / 1024).toFixed(2), 'MB');
-      const compressedFile = await compressImage(selectedFile, {
-        maxWidth: 3840, // 4K resolution
-        maxHeight: 2160, // 4K resolution
-        quality: 0.95, // Starting quality (will be adjusted if needed)
-        maxSizeMB: 4, // Vercel limit
-      });
-      console.log('[UPLOAD] Compressed size:', (compressedFile.size / 1024 / 1024).toFixed(2), 'MB');
-      
-      // Create form data
+      // Create form data (no compression - user manages file size)
+      console.log('[UPLOAD] File size:', (selectedFile.size / 1024 / 1024).toFixed(2), 'MB');
       const formData = new FormData();
-      formData.append('file', compressedFile);
+      formData.append('file', selectedFile);
       formData.append('type', type);
 
       // Simulate progress (since fetch doesn't provide upload progress)

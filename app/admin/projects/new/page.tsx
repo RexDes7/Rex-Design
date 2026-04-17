@@ -7,7 +7,6 @@
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '@/styles/admin/ProjectForm.module.css';
-import { compressImage } from '@/lib/utils/image-compression';
 
 export default function NewProjectPage() {
   const router = useRouter();
@@ -40,20 +39,12 @@ export default function NewProjectPage() {
       const token = localStorage.getItem('auth-token');
       const uploadedImages: string[] = [];
 
-      // Upload all images
+      // Upload all images (no compression - user manages file size)
       for (const file of imageFiles) {
-        // Compress image before upload
-        console.log('[UPLOAD] Original size:', (file.size / 1024 / 1024).toFixed(2), 'MB');
-        const compressedFile = await compressImage(file, {
-          maxWidth: 3840, // 4K resolution
-          maxHeight: 2160, // 4K resolution
-          quality: 0.95, // Starting quality (will be adjusted if needed)
-          maxSizeMB: 4, // Vercel limit
-        });
-        console.log('[UPLOAD] Compressed size:', (compressedFile.size / 1024 / 1024).toFixed(2), 'MB');
+        console.log('[UPLOAD] File size:', (file.size / 1024 / 1024).toFixed(2), 'MB');
         
         const formData = new FormData();
-        formData.append('file', compressedFile);
+        formData.append('file', file);
 
         const uploadRes = await fetch('/api/admin/upload', {
           method: 'POST',
