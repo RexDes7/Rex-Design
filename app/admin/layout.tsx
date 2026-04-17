@@ -14,6 +14,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const isLoginPage = pathname === '/admin/login';
 
+  // Add admin-page class to body
+  useEffect(() => {
+    document.body.classList.add('admin-page');
+    return () => {
+      document.body.classList.remove('admin-page');
+    };
+  }, []);
+
   // Check authentication
   useEffect(() => {
     if (isLoginPage) return;

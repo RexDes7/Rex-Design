@@ -17,6 +17,7 @@
     "@types/three": "^0.183.1",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.8.0",
+    "cloudinary": "^2.9.0",
     "dns2": "^2.1.0",
     "dotenv": "^17.4.1",
     "framer-motion": "^12.38.0",
