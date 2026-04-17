@@ -11,10 +11,10 @@ export interface CompressionOptions {
 }
 
 const DEFAULT_OPTIONS: CompressionOptions = {
-  maxWidth: 1920,
-  maxHeight: 1920,
-  quality: 0.85,
-  maxSizeMB: 2,
+  maxWidth: 2560,
+  maxHeight: 2560,
+  quality: 0.92,
+  maxSizeMB: 3,
 };
 
 /**
