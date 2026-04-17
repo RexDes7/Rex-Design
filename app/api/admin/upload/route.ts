@@ -82,6 +82,22 @@ export async function POST(request: NextRequest) {
     const result = await cloudinary.uploader.upload(dataURI, {
       folder: 'rex-portfolio',
       resource_type: 'image',
+      transformation: [
+        {
+          quality: 'auto:good', // Автоматическое качество (хорошее)
+          fetch_format: 'auto', // Автоматический формат (WebP для поддерживающих браузеров)
+        }
+      ],
+      // Дополнительные оптимизации
+      eager: [
+        {
+          width: 1920,
+          height: 1080,
+          crop: 'limit', // Не обрезать, только уменьшить если больше
+          quality: 'auto:good',
+          fetch_format: 'auto',
+        }
+      ],
     });
 
     console.log('[UPLOAD] Upload successful:', result.secure_url);
