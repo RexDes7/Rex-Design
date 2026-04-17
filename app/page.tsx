@@ -19,10 +19,6 @@ const MetallicSphere = dynamic(() => import('@/components/MetallicSphere'), {
   loading: () => null
 })
 
-// Force dynamic rendering
-export const dynamicParams = true;
-export const revalidate = 0;
-
 export default function Home() {
   const [fabBottom, setFabBottom] = useState('2rem')
   const [projects, setProjects] = useState<Project[]>([])

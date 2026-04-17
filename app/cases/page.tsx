@@ -9,10 +9,6 @@ import { Project } from '@/types/project';
 
 type Category = 'Все Проекты' | 'Веб-Дизайн' | 'Брендинг' | 'Типографика' | 'UI/UX';
 
-// Force dynamic rendering
-export const dynamicParams = true;
-export const revalidate = 0;
-
 export default function CasesPage() {
   const [activeFilter, setActiveFilter] = useState<Category>('Все Проекты');
   const [projects, setProjects] = useState<Project[]>([]);

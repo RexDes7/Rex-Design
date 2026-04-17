@@ -4,6 +4,10 @@ import './globals.css'
 import MainLayoutWrapper from '@/components/MainLayoutWrapper'
 import AnalyticsTracker from '@/components/AnalyticsTracker'
 
+// Disable caching for dynamic data
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
+
 const playfairDisplay = Playfair_Display({
   subsets: ['latin', 'cyrillic'],
   weight: ['400', '500', '700', '900'],
