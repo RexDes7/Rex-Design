@@ -43,6 +43,13 @@ export default function NewProjectPage() {
       for (const file of imageFiles) {
         console.log('[UPLOAD] File size:', (file.size / 1024 / 1024).toFixed(2), 'MB');
         
+        // Check file size before upload
+        if (file.size > 4 * 1024 * 1024) {
+          alert(`Файл "${file.name}" слишком большой: ${(file.size / 1024 / 1024).toFixed(2)} МБ. Максимум: 4 МБ. Пожалуйста, сожмите изображение перед загрузкой.`);
+          setLoading(false);
+          return;
+        }
+        
         const formData = new FormData();
         formData.append('file', file);
 
@@ -55,6 +62,10 @@ export default function NewProjectPage() {
         const uploadData = await uploadRes.json();
         if (uploadData.success) {
           uploadedImages.push(uploadData.data.url);
+        } else {
+          alert(`Ошибка загрузки "${file.name}": ${uploadData.error || 'Неизвестная ошибка'}`);
+          setLoading(false);
+          return;
         }
       }
 

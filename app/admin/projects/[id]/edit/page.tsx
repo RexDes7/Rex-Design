@@ -95,6 +95,13 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
         for (const file of newImages) {
           console.log('[UPLOAD] File size:', (file.size / 1024 / 1024).toFixed(2), 'MB');
           
+          // Check file size before upload
+          if (file.size > 4 * 1024 * 1024) {
+            alert(`Файл "${file.name}" слишком большой: ${(file.size / 1024 / 1024).toFixed(2)} МБ. Максимум: 4 МБ. Пожалуйста, сожмите изображение перед загрузкой.`);
+            setSaving(false);
+            return;
+          }
+          
           const formData = new FormData();
           formData.append('file', file);
 
@@ -108,7 +115,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
           if (uploadData.success) {
             allImages.push(uploadData.data.url);
           } else {
-            alert('Failed to upload image: ' + (uploadData.error || 'Unknown error'));
+            alert(`Ошибка загрузки "${file.name}": ${uploadData.error || 'Неизвестная ошибка'}`);
             setSaving(false);
             return;
           }

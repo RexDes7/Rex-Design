@@ -54,12 +54,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check file size (30MB max)
-    const maxSize = 30 * 1024 * 1024;
+    // Check file size (4MB max for Vercel)
+    const maxSize = 4 * 1024 * 1024;
     if (file.size > maxSize) {
       console.log('[UPLOAD] File too large:', file.size);
       return NextResponse.json(
-        { success: false, error: 'File too large. Maximum size is 30MB' },
+        { success: false, error: `File too large. Maximum size is 4MB. Your file: ${(file.size / 1024 / 1024).toFixed(2)}MB` },
         { status: 400 }
       );
     }
@@ -74,8 +74,13 @@ export async function POST(request: NextRequest) {
     console.log('[UPLOAD] Converting to base64...');
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    console.log('[UPLOAD] Buffer size:', buffer.length, 'bytes');
+    
     const base64 = buffer.toString('base64');
+    console.log('[UPLOAD] Base64 size:', base64.length, 'chars');
+    
     const dataURI = `data:${file.type};base64,${base64}`;
+    console.log('[UPLOAD] DataURI size:', dataURI.length, 'chars');
 
     console.log('[UPLOAD] Uploading to Cloudinary...');
     // Upload to Cloudinary with high quality settings
