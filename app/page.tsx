@@ -112,8 +112,8 @@ export default function Home() {
     };
   }, []);
 
-  // Get featured projects (first 4 projects)
-  const featuredProjects = projects.slice(0, 4)
+  // Get featured projects (projects marked as featured)
+  const featuredProjects = projects.filter(p => p.featured).slice(0, 6); // Максимум 6 избранных
 
   return (
     <main id="main-content" className={styles.main}>

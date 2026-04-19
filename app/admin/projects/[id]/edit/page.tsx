@@ -24,6 +24,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
   const [images, setImages] = useState<string[]>([]);
   const [newImages, setNewImages] = useState<File[]>([]);
   const [imageAlt, setImageAlt] = useState('');
+  const [featured, setFeatured] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -44,6 +45,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
           setYear(project.year);
           setCurrentImage(project.image || '');
           setImageAlt(project.image_alt || '');
+          setFeatured(project.featured === 1 || project.featured === true);
           
           // Parse images JSON
           if (project.images) {
@@ -139,7 +141,8 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
           year,
           image: coverImage,
           image_alt: imageAlt,
-          images: JSON.stringify(allImages)
+          images: JSON.stringify(allImages),
+          featured: featured ? 1 : 0
         })
       });
 
@@ -291,6 +294,20 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
             onChange={(e) => setImageAlt(e.target.value)}
             className={styles.input}
           />
+        </div>
+
+        <div className={styles.formGroup}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              checked={featured}
+              onChange={(e) => setFeatured(e.target.checked)}
+              style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+            />
+            <span style={{ fontSize: '1rem', fontWeight: '500' }}>
+              ⭐ Добавить в избранные работы (показывается на главной странице)
+            </span>
+          </label>
         </div>
 
         <div className={styles.formActions}>

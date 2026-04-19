@@ -17,6 +17,7 @@ export default function NewProjectPage() {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [coverIndex, setCoverIndex] = useState(0);
   const [imageAlt, setImageAlt] = useState('');
+  const [featured, setFeatured] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +79,8 @@ export default function NewProjectPage() {
         year,
         image: coverImage,
         image_alt: imageAlt,
-        images: JSON.stringify(uploadedImages)
+        images: JSON.stringify(uploadedImages),
+        featured: featured ? 1 : 0
       };
 
       console.log('[DEBUG] Sending project data:', projectData);
@@ -224,6 +226,20 @@ export default function NewProjectPage() {
             className={styles.input}
             placeholder="Describe the image for accessibility"
           />
+        </div>
+
+        <div className={styles.formGroup}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              checked={featured}
+              onChange={(e) => setFeatured(e.target.checked)}
+              style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+            />
+            <span style={{ fontSize: '1rem', fontWeight: '500' }}>
+              ⭐ Добавить в избранные работы (показывается на главной странице)
+            </span>
+          </label>
         </div>
 
         <div className={styles.formActions}>
