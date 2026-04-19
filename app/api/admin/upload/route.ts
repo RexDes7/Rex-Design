@@ -70,6 +70,25 @@ export async function POST(request: NextRequest) {
       api_secret: process.env.CLOUDINARY_API_SECRET ? 'SET' : 'NOT SET',
     });
 
+    // Verify Cloudinary credentials
+    if (!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 
+        !process.env.CLOUDINARY_API_KEY || 
+        !process.env.CLOUDINARY_API_SECRET) {
+      console.error('[UPLOAD] Missing Cloudinary credentials');
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Server configuration error: Missing Cloudinary credentials',
+          details: {
+            cloud_name: !!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+            api_key: !!process.env.CLOUDINARY_API_KEY,
+            api_secret: !!process.env.CLOUDINARY_API_SECRET,
+          }
+        },
+        { status: 500 }
+      );
+    }
+
     // Convert file to base64
     console.log('[UPLOAD] Converting to base64...');
     const bytes = await file.arrayBuffer();
@@ -84,23 +103,41 @@ export async function POST(request: NextRequest) {
 
     console.log('[UPLOAD] Uploading to Cloudinary...');
     // Upload to Cloudinary with high quality settings
-    const result = await cloudinary.uploader.upload(dataURI, {
-      folder: 'rex-portfolio',
-      resource_type: 'image',
-      quality: 'auto:best', // Лучшее автоматическое качество
-      fetch_format: 'auto', // Автоматический формат (WebP для поддерживающих браузеров)
-      // Не применяем дополнительные трансформации при загрузке
-      // чтобы сохранить максимальное качество
-    });
+    try {
+      const result = await cloudinary.uploader.upload(dataURI, {
+        folder: 'rex-portfolio',
+        resource_type: 'image',
+        quality: 'auto:best', // Лучшее автоматическое качество
+        fetch_format: 'auto', // Автоматический формат (WebP для поддерживающих браузеров)
+        // Не применяем дополнительные трансформации при загрузке
+        // чтобы сохранить максимальное качество
+      });
 
-    console.log('[UPLOAD] Upload successful:', result.secure_url);
+      console.log('[UPLOAD] Upload successful:', result.secure_url);
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        url: result.secure_url
-      }
-    });
+      return NextResponse.json({
+        success: true,
+        data: {
+          url: result.secure_url
+        }
+      });
+    } catch (cloudinaryError: any) {
+      console.error('[UPLOAD] Cloudinary error:', cloudinaryError);
+      console.error('[UPLOAD] Cloudinary error details:', {
+        message: cloudinaryError.message,
+        error: cloudinaryError.error,
+        http_code: cloudinaryError.http_code,
+      });
+      
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: `Cloudinary upload failed: ${cloudinaryError.message || 'Unknown error'}`,
+          details: cloudinaryError.error?.message || cloudinaryError.message
+        },
+        { status: 500 }
+      );
+    }
   } catch (error: any) {
     console.error('[UPLOAD] Upload error:', error);
     console.error('[UPLOAD] Error details:', {
