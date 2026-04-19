@@ -89,30 +89,39 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Convert file to base64
-    console.log('[UPLOAD] Converting to base64...');
+    // Convert file to buffer for upload
+    console.log('[UPLOAD] Converting to buffer...');
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     console.log('[UPLOAD] Buffer size:', buffer.length, 'bytes');
-    
-    const base64 = buffer.toString('base64');
-    console.log('[UPLOAD] Base64 size:', base64.length, 'chars');
-    
-    const dataURI = `data:${file.type};base64,${base64}`;
-    console.log('[UPLOAD] DataURI size:', dataURI.length, 'chars');
 
     console.log('[UPLOAD] Uploading to Cloudinary...');
     // Upload to Cloudinary with high quality settings
     try {
-      const result = await cloudinary.uploader.upload(dataURI, {
-        folder: 'rex-portfolio',
-        resource_type: 'image',
-        quality: 'auto:best', // Лучшее автоматическое качество
-        fetch_format: 'auto', // Автоматический формат (WebP для поддерживающих браузеров)
-        // Не применяем дополнительные трансформации при загрузке
-        // чтобы сохранить максимальное качество
+      // Use upload_stream instead of base64 to save memory
+      const uploadPromise = new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: 'rex-portfolio',
+            resource_type: 'image',
+            quality: 'auto:best',
+            fetch_format: 'auto',
+            timeout: 60000, // 60 seconds timeout
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+
+        // Write buffer to stream
+        uploadStream.end(buffer);
       });
 
+      const result: any = await uploadPromise;
       console.log('[UPLOAD] Upload successful:', result.secure_url);
 
       return NextResponse.json({
