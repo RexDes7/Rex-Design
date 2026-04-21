@@ -1,0 +1,65 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0B0B0B"/>
+  
+  <!-- Gradient overlay -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1A1A1A;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#0B0B0B;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#C9A96E;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#C9A96E;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+  
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Glow effect -->
+  <ellipse cx="600" cy="315" rx="400" ry="200" fill="url(#glow)"/>
+  
+  <!-- Main logo REX -->
+  <text 
+    x="600" 
+    y="280" 
+    font-family="Arial, Helvetica, sans-serif" 
+    font-size="180" 
+    font-weight="900" 
+    fill="#C9A96E" 
+    text-anchor="middle"
+    letter-spacing="-8"
+  >REX</text>
+  
+  <!-- Subtitle DESIGN -->
+  <text 
+    x="600" 
+    y="350" 
+    font-family="Arial, Helvetica, sans-serif" 
+    font-size="48" 
+    font-weight="500" 
+    fill="#C9A96E" 
+    text-anchor="middle"
+    letter-spacing="12"
+    opacity="0.8"
+  >DESIGN</text>
+  
+  <!-- Tagline -->
+  <text 
+    x="600" 
+    y="450" 
+    font-family="Arial, Helvetica, sans-serif" 
+    font-size="32" 
+    font-weight="400" 
+    fill="#FFFFFF" 
+    text-anchor="middle"
+    opacity="0.7"
+  >Дизайн студия | Брендинг, Веб-дизайн, Типографика</text>
+  
+  <!-- Decorative line -->
+  <rect x="400" y="390" width="400" height="2" fill="#C9A96E" opacity="0.5" rx="1"/>
+  
+  <!-- Bottom accent -->
+  <rect x="0" y="620" width="1200" height="10" fill="url(#bgGradient)"/>
+  <rect x="0" y="620" width="1200" height="2" fill="#C9A96E" opacity="0.3"/>
+</svg>
