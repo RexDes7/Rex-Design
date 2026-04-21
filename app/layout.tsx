@@ -89,6 +89,14 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://rex-dsgn.vercel.app',
   },
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+  },
 }
 
 export const viewport = {
