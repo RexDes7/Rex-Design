@@ -8,7 +8,15 @@
   cursor: pointer;
   background: var(--color-dark-secondary);
   border: 1px solid rgba(201, 169, 110, 0.1);
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+  /* GPU acceleration */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  /* Containment for performance */
+  contain: layout style paint;
 }
 
 @media (min-width: 768px) {
@@ -18,7 +26,7 @@
 }
 
 .projectCard:hover {
-  transform: translateY(-8px);
+  transform: translateY(-8px) translateZ(0);
   border-color: rgba(201, 169, 110, 0.3);
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4), 0 8px 32px rgba(201, 169, 110, 0.2);
 }
@@ -63,8 +71,13 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.4s ease;
   filter: grayscale(0.3) brightness(0.8);
+  /* GPU acceleration */
+  will-change: transform;
+  transform: translateZ(0) scale(1);
+  backface-visibility: hidden;
 }
 
 .imageLoading {
@@ -76,7 +89,7 @@
 }
 
 .projectCard:hover .projectImage {
-  transform: scale(1.08);
+  transform: translateZ(0) scale(1.08);
   filter: grayscale(0) brightness(1);
 }
 
@@ -94,16 +107,14 @@
     rgba(11, 11, 11, 0.4) 50%,
     rgba(11, 11, 11, 0.95) 100%
   );
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.3s ease;
+  /* GPU acceleration */
+  will-change: opacity;
+  transform: translateZ(0);
 }
 
 .projectCard:hover .imageContainer::after {
-  background: linear-gradient(
-    to bottom,
-    rgba(11, 11, 11, 0.2) 0%,
-    rgba(11, 11, 11, 0.6) 50%,
-    rgba(11, 11, 11, 0.98) 100%
-  );
+  opacity: 0.85;
 }
 
 /* Content */
@@ -114,12 +125,15 @@
   right: 0;
   padding: 2.5rem;
   z-index: 10;
-  transform: translateY(0);
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  /* GPU acceleration */
+  will-change: transform;
+  transform: translateY(0) translateZ(0);
+  backface-visibility: hidden;
 }
 
 .projectCard:hover .content {
-  transform: translateY(-10px);
+  transform: translateY(-10px) translateZ(0);
 }
 
 /* Title */
@@ -182,7 +196,10 @@
   color: var(--color-gold);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  /* GPU acceleration */
+  will-change: background-color, border-color;
+  transform: translateZ(0);
 }
 
 .projectCard:hover .badge {
@@ -190,7 +207,7 @@
   border-color: var(--color-gold);
 }
 
-/* Glow Effect on Hover */
+/* Glow Effect on Hover - OPTIMIZED: removed for performance */
 .projectCard::before {
   content: '';
   position: absolute;
@@ -200,13 +217,16 @@
   height: 100%;
   background: radial-gradient(
     circle at center,
-    rgba(201, 169, 110, 0.15) 0%,
-    transparent 70%
+    rgba(201, 169, 110, 0.1) 0%,
+    transparent 60%
   );
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.3s ease;
   pointer-events: none;
   z-index: 5;
+  /* GPU acceleration */
+  will-change: opacity;
+  transform: translateZ(0);
 }
 
 .projectCard:hover::before {
