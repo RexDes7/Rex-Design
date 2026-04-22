@@ -107,7 +107,7 @@ export default function MetallicSphere() {
     const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
 
-    // Create smaller droplet spheres around the main sphere
+    // Create smaller droplet spheres around the main sphere (REDUCED for performance)
     const droplets: THREE.Mesh[] = [];
     const dropletData = [
       // Medium droplets
@@ -115,18 +115,11 @@ export default function MetallicSphere() {
       { size: 0.25, x: -3.5, y: -1, z: 1.5, speedX: 0.5, speedY: 0.4 },
       { size: 0.35, x: 2, y: -2, z: -1, speedX: 0.35, speedY: 0.45 },
       { size: 0.3, x: -2.5, y: 2, z: 2.5, speedX: 0.45, speedY: 0.35 },
-      { size: 0.2, x: 3, y: -1.5, z: 3, speedX: 0.38, speedY: 0.42 },
-      // Tiny droplets scattered around
+      // Tiny droplets - REDUCED from 11 to 4
       { size: 0.12, x: -5, y: 3, z: 1, speedX: 0.3, speedY: 0.25 },
-      { size: 0.1, x: 5.5, y: -2.5, z: 2, speedX: 0.32, speedY: 0.28 },
       { size: 0.15, x: -4, y: -3, z: 0.5, speedX: 0.28, speedY: 0.33 },
-      { size: 0.08, x: 6, y: 2, z: 1.5, speedX: 0.35, speedY: 0.3 },
       { size: 0.13, x: -6, y: 0, z: 2.5, speedX: 0.27, speedY: 0.31 },
-      { size: 0.11, x: 4.5, y: 3.5, z: 0, speedX: 0.33, speedY: 0.29 },
-      { size: 0.09, x: -3, y: -4, z: 3, speedX: 0.31, speedY: 0.26 },
       { size: 0.14, x: 5, y: 0.5, z: -1, speedX: 0.29, speedY: 0.34 },
-      { size: 0.1, x: -5.5, y: -2, z: -0.5, speedX: 0.36, speedY: 0.27 },
-      { size: 0.12, x: 3.5, y: -3.5, z: 1.5, speedX: 0.34, speedY: 0.32 },
     ];
 
     dropletData.forEach((data) => {
@@ -237,36 +230,38 @@ export default function MetallicSphere() {
       // This creates the effect of surface moving under the light
       sphere.rotation.y += 0.001;
 
-      // Liquid deformation effect
-      const positions = positionAttribute.array;
-      for (let i = 0; i < positions.length; i += 3) {
-        const x = originalPositions[i];
-        const y = originalPositions[i + 1];
-        const z = originalPositions[i + 2];
+      // Liquid deformation effect - OPTIMIZED: only every 5th frame
+      if (Math.floor(time * 200) % 5 === 0) {
+        const positions = positionAttribute.array;
+        for (let i = 0; i < positions.length; i += 3) {
+          const x = originalPositions[i];
+          const y = originalPositions[i + 1];
+          const z = originalPositions[i + 2];
 
-        // Create organic, flowing deformation
-        const wave1 = Math.sin(x * 0.8 + time * 0.5) * 0.08;
-        const wave2 = Math.cos(y * 0.7 + time * 0.6) * 0.08;
-        const wave3 = Math.sin(z * 0.9 + time * 0.4) * 0.08;
-        const wave4 = Math.cos((x + y + z) * 0.5 + time * 0.7) * 0.06;
+          // Create organic, flowing deformation
+          const wave1 = Math.sin(x * 0.8 + time * 0.5) * 0.08;
+          const wave2 = Math.cos(y * 0.7 + time * 0.6) * 0.08;
+          const wave3 = Math.sin(z * 0.9 + time * 0.4) * 0.08;
+          const wave4 = Math.cos((x + y + z) * 0.5 + time * 0.7) * 0.06;
 
-        // Apply deformation
-        const deformation = wave1 + wave2 + wave3 + wave4;
-        const length = Math.sqrt(x * x + y * y + z * z);
-        const normalizedX = x / length;
-        const normalizedY = y / length;
-        const normalizedZ = z / length;
+          // Apply deformation
+          const deformation = wave1 + wave2 + wave3 + wave4;
+          const length = Math.sqrt(x * x + y * y + z * z);
+          const normalizedX = x / length;
+          const normalizedY = y / length;
+          const normalizedZ = z / length;
 
-        positions[i] = x + normalizedX * deformation;
-        positions[i + 1] = y + normalizedY * deformation;
-        positions[i + 2] = z + normalizedZ * deformation;
+          positions[i] = x + normalizedX * deformation;
+          positions[i + 1] = y + normalizedY * deformation;
+          positions[i + 2] = z + normalizedZ * deformation;
+        }
+
+        positionAttribute.needsUpdate = true;
+        geometry.computeVertexNormals(); // Recalculate normals for proper lighting
       }
 
-      positionAttribute.needsUpdate = true;
-      geometry.computeVertexNormals(); // Recalculate normals for proper lighting
-
-      // Animate droplets - liquid deformation and floating (optimized - only every 3rd frame)
-      if (Math.floor(time * 200) % 3 === 0) {
+      // Animate droplets - liquid deformation and floating (optimized - only every 5th frame)
+      if (Math.floor(time * 200) % 5 === 0) {
         droplets.forEach((droplet) => {
           const dropletGeometry = droplet.geometry as THREE.SphereGeometry;
           const dropletPositions = dropletGeometry.attributes.position.array;

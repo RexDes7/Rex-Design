@@ -13,7 +13,7 @@ import { animationConfig } from '@/lib/animations/config'
 import { Project } from '@/types/project'
 import styles from './page.module.css'
 
-// Динамический импорт 3D компонента для оптимизации
+// Динамический импорт 3D компонента для оптимизации - только на десктопе
 const MetallicSphere = dynamic(() => import('@/components/MetallicSphere'), {
   ssr: false,
   loading: () => null
@@ -24,6 +24,26 @@ export default function Home() {
   const [projects, setProjects] = useState<Project[]>([])
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [contacts, setContacts] = useState({ email: '', phone: '', telegram: '' })
+  const [isMobile, setIsMobile] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+
+  // Detect mobile and reduced motion preference
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    const checkReducedMotion = () => {
+      setPrefersReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    }
+    
+    checkMobile()
+    checkReducedMotion()
+    
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -119,8 +139,8 @@ export default function Home() {
     <main id="main-content" className={styles.main}>
       {/* Hero Section */}
       <section className={styles.hero}>
-        <SpaceEffects />
-        <MetallicSphere />
+        {!prefersReducedMotion && <SpaceEffects />}
+        {!isMobile && !prefersReducedMotion && <MetallicSphere />}
         <div className={styles.heroContent}>
           <FadeInWhenVisible 
             variant="slideUp" 

@@ -23,13 +23,13 @@ export default function SpaceEffects() {
       }, (delay + duration) * 1000 + 100);
     };
 
-    // Generate shooting star every 8-15 seconds
+    // Generate shooting star every 12-20 seconds (increased from 8-15)
     const interval = setInterval(() => {
       generateShootingStar();
-    }, 8000 + Math.random() * 7000);
+    }, 12000 + Math.random() * 8000);
 
-    // Generate first one after 3 seconds
-    const timeout = setTimeout(generateShootingStar, 3000);
+    // Generate first one after 5 seconds (increased from 3)
+    const timeout = setTimeout(generateShootingStar, 5000);
 
     return () => {
       clearInterval(interval);
