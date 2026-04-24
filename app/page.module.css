@@ -154,6 +154,12 @@
   z-index: 2;
 }
 
+@media (max-width: 767px) {
+  .heroSubtitle {
+    margin-bottom: 2.5rem;
+  }
+}
+
 .heroCta {
   display: flex;
   gap: 1.5rem;
@@ -299,6 +305,12 @@
   background: var(--color-black);
 }
 
+@media (max-width: 767px) {
+  .projectsSection {
+    padding: 4rem 1.5rem 6rem;
+  }
+}
+
 .projectsGrid {
   display: grid;
   grid-template-columns: 1fr;
@@ -334,6 +346,13 @@
   
   .projectsGrid > :nth-child(4) {
     grid-column: span 8;
+  }
+}
+
+@media (max-width: 767px) {
+  .projectsGrid {
+    gap: 2rem;
+    margin-bottom: 2rem;
   }
 }
 
@@ -546,6 +565,15 @@
   gap: 1.5rem;
 }
 
+@media (max-width: 767px) {
+  .projectsHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+}
+
 .sectionTitle {
   font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 800;
@@ -571,6 +599,7 @@
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   white-space: nowrap;
 }
 
@@ -578,6 +607,13 @@
   background: rgba(201, 169, 110, 0.1);
   border-color: var(--color-gold);
   color: var(--color-gold);
+}
+
+@media (max-width: 767px) {
+  .allCasesButton {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* Contact Section */
@@ -708,6 +744,12 @@
   .heroButtons {
     flex-direction: column;
     align-items: stretch;
+    gap: 1rem;
+  }
+  
+  .heroButton {
+    width: 100%;
+    justify-content: center;
   }
   
   .contactInfo,
@@ -724,5 +766,10 @@
   
   .fab .material-symbols-outlined {
     font-size: 1.5rem;
+  }
+  
+  .sectionTitle {
+    font-size: clamp(2rem, 8vw, 2.5rem);
+    text-align: left;
   }
 }
