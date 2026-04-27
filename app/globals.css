@@ -1,8 +1,5 @@
 /* Premium Dark Luxury Design System */
 
-/* Import Modern Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
 :root {
   /* Premium Color Palette */
   --color-black: #0B0B0B;
@@ -22,7 +19,8 @@
   --color-gray-dark: #404040;
   
   /* Typography */
-  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-primary: var(--font-headline), Georgia, serif;
+  --font-numbers: var(--font-headline), Georgia, serif;
   
   /* Font Sizes - Desktop First */
   --text-hero: clamp(4rem, 8vw, 9rem);
@@ -377,4 +375,31 @@ img {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-gold);
+}
+
+/* Fantasy application palette */
+:root {
+  --color-background: #0B132B;
+  --color-accent: #D4AF37;
+  --color-text: #F5E6C8;
+  --color-black: var(--color-background);
+  --color-dark: var(--color-background);
+  --color-dark-secondary: color-mix(in srgb, var(--color-background) 94%, var(--color-text) 6%);
+  --color-dark-tertiary: color-mix(in srgb, var(--color-background) 90%, var(--color-text) 10%);
+  --color-graphite: color-mix(in srgb, var(--color-background) 84%, var(--color-text) 16%);
+  --color-gold: var(--color-accent);
+  --color-gold-light: var(--color-accent);
+  --color-gold-dark: var(--color-accent);
+  --color-beige: var(--color-text);
+  --color-white: var(--color-text);
+  --color-gray-light: color-mix(in srgb, var(--color-text) 76%, var(--color-background) 24%);
+  --color-gray: color-mix(in srgb, var(--color-text) 58%, var(--color-background) 42%);
+  --color-gray-dark: color-mix(in srgb, var(--color-accent) 45%, var(--color-background) 55%);
+  --shadow-accent: color-mix(in srgb, var(--color-accent) 28%, transparent);
+}
+
+html,
+body {
+  background: var(--color-background);
+  color: var(--color-text);
 }

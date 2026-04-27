@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Playfair_Display, Space_Grotesk } from 'next/font/google'
+import { Playfair_Display } from 'next/font/google'
 import './globals.css'
 import MainLayoutWrapper from '@/components/MainLayoutWrapper'
 import AnalyticsTracker from '@/components/AnalyticsTracker'
@@ -13,14 +13,6 @@ const playfairDisplay = Playfair_Display({
   subsets: ['latin', 'cyrillic'],
   weight: ['400', '500', '700', '900'],
   variable: '--font-headline',
-  display: 'swap',
-  preload: true,
-})
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-numbers',
   display: 'swap',
   preload: true,
 })
@@ -114,7 +106,7 @@ export default function RootLayout({
   const webSiteSchema = generateWebSiteSchema();
 
   return (
-    <html lang="ru" className={`${playfairDisplay.variable} ${spaceGrotesk.variable}`}>
+    <html lang="ru" className={playfairDisplay.variable}>
       <head>
         <link
           rel="preconnect"
