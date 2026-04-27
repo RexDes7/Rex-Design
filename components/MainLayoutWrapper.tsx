@@ -15,8 +15,22 @@ export default function MainLayoutWrapper({ children }: MainLayoutWrapperProps) 
   
   // Don't show Navigation, Footer and CustomCursor on admin pages
   const isAdminPage = pathname?.startsWith('/admin');
+  const isFantasyPage = [
+    '/',
+    '/character-builder',
+    '/item-builder',
+    '/map-editor',
+    '/profile',
+    '/marketplace',
+    '/library',
+    '/game',
+  ].includes(pathname || '');
   
   if (isAdminPage) {
+    return <>{children}</>;
+  }
+
+  if (isFantasyPage) {
     return <>{children}</>;
   }
   
