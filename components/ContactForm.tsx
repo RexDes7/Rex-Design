@@ -20,9 +20,12 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     contact: '',
-    budget: '100К-300К',
+    budget: '1000-5000',
     description: '',
   })
+  
+  const [customBudget, setCustomBudget] = useState('')
+  const [showCustomBudget, setShowCustomBudget] = useState(false)
 
   const [errors, setErrors] = useState<ValidationErrors>({})
   const [touched, setTouched] = useState<Record<string, boolean>>({})
@@ -58,12 +61,34 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    
+    // Handle budget selection
+    if (name === 'budget') {
+      if (value === 'Индивидуальный') {
+        setShowCustomBudget(true)
+        setFormData((prev) => ({ ...prev, [name]: '' }))
+      } else {
+        setShowCustomBudget(false)
+        setCustomBudget('')
+        setFormData((prev) => ({ ...prev, [name]: value }))
+      }
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }))
+    }
 
     // Validate on change if field was touched
     if (touched[name]) {
       const error = validateField(name as keyof ContactFormData, value)
       setErrors((prev) => ({ ...prev, [name]: error }))
+    }
+  }
+
+  const handleCustomBudgetChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    // Only allow numbers
+    if (value === '' || /^\d+$/.test(value)) {
+      setCustomBudget(value)
+      setFormData((prev) => ({ ...prev, budget: value }))
     }
   }
 
@@ -131,10 +156,12 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
           setFormData({
             name: '',
             contact: '',
-            budget: '100К-300К',
+            budget: '1000-5000',
             description: '',
           })
           setTouched({})
+          setShowCustomBudget(false)
+          setCustomBudget('')
           
           if (onSubmit) {
             onSubmit(formData)
@@ -204,14 +231,25 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
         <select
           id="budget"
           name="budget"
-          value={formData.budget}
+          value={showCustomBudget ? 'Индивидуальный' : formData.budget}
           onChange={handleChange}
           className={styles.select}
         >
-          <option value="100К-300К">100К-300К</option>
-          <option value="300К-700К">300К-700К</option>
-          <option value="700К+">700К+</option>
+          <option value="1000-5000">1 000 - 5 000 ₽</option>
+          <option value="5000-10000">5 000 - 10 000 ₽</option>
+          <option value="10000-50000">10 000 - 50 000 ₽</option>
+          <option value="Индивидуальный">Индивидуальный</option>
         </select>
+        {showCustomBudget && (
+          <input
+            type="text"
+            value={customBudget}
+            onChange={handleCustomBudgetChange}
+            className={`${styles.input} ${styles.customBudgetInput}`}
+            placeholder="Введите сумму в рублях"
+            style={{ marginTop: '10px' }}
+          />
+        )}
       </div>
 
       <div className={styles.field}>
