@@ -91,7 +91,14 @@ export default function ContactPage() {
                       rel="noopener noreferrer"
                     >
                       <span className={styles.numberFont}>
-                        {contacts.telegram.startsWith('@') ? contacts.telegram : `@${contacts.telegram}`}
+                        {(() => {
+                          // Extract username from URL or use as-is
+                          if (contacts.telegram.startsWith('http')) {
+                            const username = contacts.telegram.split('/').pop() || '';
+                            return `@${username}`;
+                          }
+                          return contacts.telegram.startsWith('@') ? contacts.telegram : `@${contacts.telegram}`;
+                        })()}
                       </span>
                     </a>
                   </div>
