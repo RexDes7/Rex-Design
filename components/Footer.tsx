@@ -8,15 +8,13 @@ interface Contacts {
   email: string;
   telegram: string;
   behance: string;
-  dribbble: string;
 }
 
 export default function Footer() {
   const [contacts, setContacts] = useState<Contacts>({
     email: 'hello@arhiv24.com',
-    telegram: 'https://t.me/arhiv24',
-    behance: 'https://behance.net/arhiv24',
-    dribbble: 'https://dribbble.com/arhiv24'
+    telegram: 'https://t.me/RLC_W',
+    behance: 'https://behance.net/arhiv24'
   });
 
   useEffect(() => {
@@ -42,7 +40,6 @@ export default function Footer() {
   const socialLinks = [
     { href: contacts.telegram, label: 'Telegram' },
     { href: contacts.behance, label: 'Behance' },
-    { href: contacts.dribbble, label: 'Dribbble' },
     { href: `mailto:${contacts.email}`, label: 'Email' },
   ];
 
