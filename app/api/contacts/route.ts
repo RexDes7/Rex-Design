@@ -17,9 +17,8 @@ export async function GET() {
         success: true,
         data: {
           email: 'hello@arhiv24.com',
-          telegram: 'https://t.me/arhiv24',
-          behance: 'https://behance.net/arhiv24',
-          dribbble: 'https://dribbble.com/arhiv24'
+          telegram: 'https://t.me/RLC_W',
+          behance: 'https://behance.net/arhiv24'
         }
       });
     }
