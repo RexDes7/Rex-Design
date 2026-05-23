@@ -29,7 +29,7 @@ export interface Session {
 // Content Management
 // ============================================================================
 
-export type ProjectCategory = 'Веб-Дизайн' | 'Брендинг' | 'Типографика' | 'UI/UX';
+export type ProjectCategory = 'Веб-Дизайн' | 'Брендинг' | 'Типографика' | 'UI/UX' | 'Инфографика' | 'Полиграфия' | 'Иллюстрация' | 'Анимация';
 
 export interface Project {
   id: string;

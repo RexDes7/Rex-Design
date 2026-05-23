@@ -203,6 +203,10 @@ export default function ProjectForm({ project, onSubmit, onCancel }: ProjectForm
           <option value="Брендинг">Брендинг</option>
           <option value="Типографика">Типографика</option>
           <option value="UI/UX">UI/UX</option>
+          <option value="Инфографика">Инфографика</option>
+          <option value="Полиграфия">Полиграфия</option>
+          <option value="Иллюстрация">Иллюстрация</option>
+          <option value="Анимация">Анимация</option>
         </select>
         {errors.category && <span className={styles.error}>{errors.category}</span>}
       </div>

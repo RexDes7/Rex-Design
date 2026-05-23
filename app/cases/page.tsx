@@ -7,7 +7,7 @@ import styles from './page.module.css';
 
 import { Project } from '@/types/project';
 
-type Category = 'Все Проекты' | 'Веб-Дизайн' | 'Брендинг' | 'Типографика' | 'UI/UX';
+type Category = 'Все Проекты' | 'Веб-Дизайн' | 'Брендинг' | 'Типографика' | 'UI/UX' | 'Инфографика' | 'Полиграфия' | 'Иллюстрация' | 'Анимация';
 
 export default function CasesPage() {
   const [activeFilter, setActiveFilter] = useState<Category>('Все Проекты');
@@ -73,6 +73,10 @@ export default function CasesPage() {
     'Брендинг',
     'Типографика',
     'UI/UX',
+    'Инфографика',
+    'Полиграфия',
+    'Иллюстрация',
+    'Анимация',
   ];
 
   const filteredProjects = activeFilter === 'Все Проекты'
