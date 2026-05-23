@@ -77,7 +77,13 @@ export async function PUT(
       );
     }
 
-    const project = await updateProject(params.id, body);
+    // Prepare update data with categories
+    const updateData = {
+      ...body,
+      categories: body.categories ? JSON.stringify(body.categories) : JSON.stringify([body.category])
+    };
+
+    const project = await updateProject(params.id, updateData);
 
     return NextResponse.json({
       success: true,

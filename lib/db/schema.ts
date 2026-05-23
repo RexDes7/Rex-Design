@@ -36,6 +36,7 @@ export interface Project {
   title: string;
   description: string;
   category: ProjectCategory;
+  categories: string; // JSON string of category array for multiple categories
   year: string;
   image: string;
   image_alt: string;
@@ -166,6 +167,7 @@ export interface CreateProjectInput {
   title: string;
   description: string;
   category: ProjectCategory;
+  categories?: ProjectCategory[]; // Multiple categories support
   year: string;
   image: string;
   image_alt: string;

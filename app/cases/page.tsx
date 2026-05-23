@@ -35,11 +35,24 @@ export default function CasesPage() {
               }
             }
             
+            // Parse categories if it's a string
+            let categories = p.categories;
+            if (typeof categories === 'string') {
+              try {
+                categories = JSON.parse(categories);
+              } catch (e) {
+                categories = [p.category];
+              }
+            } else if (!categories) {
+              categories = [p.category];
+            }
+            
             return {
               id: p.id,
               title: p.title,
               description: p.description,
               category: p.category as Project['category'],
+              categories: categories,
               year: p.year,
               image: p.image,
               imageAlt: p.image_alt || p.imageAlt || '',
@@ -81,7 +94,14 @@ export default function CasesPage() {
 
   const filteredProjects = activeFilter === 'Все Проекты'
     ? projects
-    : projects.filter(project => project.category === activeFilter);
+    : projects.filter(project => {
+        // Check if project has categories array
+        if (project.categories && Array.isArray(project.categories)) {
+          return project.categories.includes(activeFilter);
+        }
+        // Fallback to single category
+        return project.category === activeFilter;
+      });
 
   const handleFilterSelect = (category: Category) => {
     setActiveFilter(category);

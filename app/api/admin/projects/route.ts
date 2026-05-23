@@ -76,6 +76,7 @@ export async function POST(request: NextRequest) {
       console.log('[DEBUG] title:', body.title);
       console.log('[DEBUG] description:', body.description);
       console.log('[DEBUG] category:', body.category);
+      console.log('[DEBUG] categories:', body.categories);
       console.log('[DEBUG] year:', body.year);
       console.log('[DEBUG] image_alt:', body.image_alt);
       return NextResponse.json(
@@ -95,6 +96,7 @@ export async function POST(request: NextRequest) {
       title: body.title,
       description: body.description,
       category: body.category,
+      categories: body.categories ? JSON.stringify(body.categories) : JSON.stringify([body.category]),
       year: body.year,
       image: body.image || '',
       image_alt: body.image_alt,

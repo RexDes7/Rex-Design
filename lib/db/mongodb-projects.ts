@@ -7,6 +7,7 @@ export interface Project {
   title: string;
   description: string;
   category: string;
+  categories?: string; // JSON string of categories array
   year: string;
   image: string;
   image_alt: string;

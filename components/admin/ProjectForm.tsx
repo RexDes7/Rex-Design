@@ -27,6 +27,7 @@ export interface ProjectFormData {
   title: string;
   description: string;
   category: ProjectCategory;
+  categories: ProjectCategory[]; // Multiple categories
   year: string;
   image: string;
   image_alt: string;
@@ -44,6 +45,7 @@ export default function ProjectForm({ project, onSubmit, onCancel }: ProjectForm
     title: project?.title || '',
     description: project?.description || '',
     category: project?.category || 'Веб-Дизайн',
+    categories: project?.categories ? (typeof project.categories === 'string' ? JSON.parse(project.categories) : project.categories) : [project?.category || 'Веб-Дизайн'],
     year: project?.year || new Date().getFullYear().toString(),
     image: project?.image || '',
     image_alt: project?.image_alt || '',
@@ -76,6 +78,10 @@ export default function ProjectForm({ project, onSubmit, onCancel }: ProjectForm
 
     if (!formData.category) {
       newErrors.category = 'Category is required';
+    }
+    
+    if (!formData.categories || formData.categories.length === 0) {
+      newErrors.category = 'At least one category is required';
     }
 
     if (!formData.year.trim()) {
@@ -115,6 +121,28 @@ export default function ProjectForm({ project, onSubmit, onCancel }: ProjectForm
     // Clear error for this field
     if (errors[name as keyof ProjectFormData]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
+  };
+
+  const handleCategoryToggle = (category: ProjectCategory) => {
+    setFormData((prev) => {
+      const categories = prev.categories.includes(category)
+        ? prev.categories.filter(c => c !== category)
+        : [...prev.categories, category];
+      
+      // Set primary category to first selected
+      const primaryCategory = categories.length > 0 ? categories[0] : 'Веб-Дизайн';
+      
+      return {
+        ...prev,
+        categories,
+        category: primaryCategory
+      };
+    });
+    
+    // Clear error
+    if (errors.category) {
+      setErrors((prev) => ({ ...prev, category: undefined }));
     }
   };
 
@@ -187,27 +215,25 @@ export default function ProjectForm({ project, onSubmit, onCancel }: ProjectForm
         {errors.description && <span className={styles.error}>{errors.description}</span>}
       </div>
 
-      {/* Category */}
+      {/* Categories */}
       <div className={styles.formGroup}>
-        <label htmlFor="category" className={styles.label}>
-          Category <span className={styles.required}>*</span>
+        <label className={styles.label}>
+          Categories <span className={styles.required}>*</span>
         </label>
-        <select
-          id="category"
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          className={`${styles.select} ${errors.category ? styles.inputError : ''}`}
-        >
-          <option value="Веб-Дизайн">Веб-Дизайн</option>
-          <option value="Брендинг">Брендинг</option>
-          <option value="Типографика">Типографика</option>
-          <option value="UI/UX">UI/UX</option>
-          <option value="Инфографика">Инфографика</option>
-          <option value="Полиграфия">Полиграфия</option>
-          <option value="Иллюстрация">Иллюстрация</option>
-          <option value="Анимация">Анимация</option>
-        </select>
+        <p className={styles.helpText}>Select one or more categories for this project</p>
+        <div className={styles.categoryCheckboxes}>
+          {(['Веб-Дизайн', 'Брендинг', 'Типографика', 'UI/UX', 'Инфографика', 'Полиграфия', 'Иллюстрация', 'Анимация'] as ProjectCategory[]).map((cat) => (
+            <label key={cat} className={styles.categoryCheckboxLabel}>
+              <input
+                type="checkbox"
+                checked={formData.categories.includes(cat)}
+                onChange={() => handleCategoryToggle(cat)}
+                className={styles.checkbox}
+              />
+              <span>{cat}</span>
+            </label>
+          ))}
+        </div>
         {errors.category && <span className={styles.error}>{errors.category}</span>}
       </div>
 
