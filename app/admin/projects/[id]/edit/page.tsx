@@ -203,10 +203,14 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
             className={styles.select}
           >
             <option value="">Select category</option>
-            <option value="Веб-Дизайн">Web Design</option>
-            <option value="Брендинг">Branding</option>
+            <option value="Веб-Дизайн">Веб-Дизайн</option>
+            <option value="Брендинг">Брендинг</option>
             <option value="UI/UX">UI/UX</option>
-            <option value="Типографика">Typography</option>
+            <option value="Типографика">Типографика</option>
+            <option value="Инфографика">Инфографика</option>
+            <option value="Полиграфия">Полиграфия</option>
+            <option value="Иллюстрация">Иллюстрация</option>
+            <option value="Анимация">Анимация</option>
           </select>
         </div>
 
