@@ -175,7 +175,10 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         >
           <button 
             className={styles.lightboxClose}
-            onClick={() => setLightboxImage(null)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightboxImage(null);
+            }}
             aria-label="Close lightbox"
           >
             <span className="material-symbols-outlined">close</span>
