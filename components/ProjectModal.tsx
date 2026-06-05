@@ -171,7 +171,10 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
       {lightboxImage && (
         <div 
           className={styles.lightbox} 
-          onClick={() => setLightboxImage(null)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setLightboxImage(null);
+          }}
         >
           <button 
             className={styles.lightboxClose}
