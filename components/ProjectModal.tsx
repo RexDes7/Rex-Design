@@ -15,6 +15,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
   const [showFloatingButton, setShowFloatingButton] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
 
@@ -24,7 +25,13 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
     
     // Handle ESC key
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        if (lightboxImage) {
+          setLightboxImage(null);
+        } else {
+          onClose();
+        }
+      }
     };
     window.addEventListener('keydown', handleEsc);
     
@@ -38,7 +45,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
       document.body.style.overflow = 'unset';
       window.removeEventListener('keydown', handleEsc);
     };
-  }, [onClose]);
+  }, [onClose, lightboxImage]);
 
   useEffect(() => {
     if (!isReady) return;
@@ -130,7 +137,12 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
           {/* Gallery */}
           <div className={styles.gallery}>
             {galleryImages.map((img, index) => (
-              <div key={index} className={styles.imageWrapper}>
+              <div 
+                key={index} 
+                className={styles.imageWrapper}
+                onClick={() => setLightboxImage(img)}
+                style={{ cursor: 'pointer' }}
+              >
                 {!loadedImages.has(index) && (
                   <div className={styles.imageSkeleton} aria-hidden="true" />
                 )}
@@ -154,6 +166,32 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
           </div>
         </div>
       </div>
+
+      {/* Lightbox */}
+      {lightboxImage && (
+        <div 
+          className={styles.lightbox} 
+          onClick={() => setLightboxImage(null)}
+        >
+          <button 
+            className={styles.lightboxClose}
+            onClick={() => setLightboxImage(null)}
+            aria-label="Close lightbox"
+          >
+            <span className="material-symbols-outlined">close</span>
+          </button>
+          <div className={styles.lightboxContent} onClick={(e) => e.stopPropagation()}>
+            <Image
+              src={lightboxImage}
+              alt={project.title}
+              width={1920}
+              height={1080}
+              className={styles.lightboxImage}
+              quality={100}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
