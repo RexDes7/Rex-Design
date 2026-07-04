@@ -23,7 +23,7 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
     budget: '1000-5000',
     description: '',
   })
-  
+
   const [customBudget, setCustomBudget] = useState('')
   const [showCustomBudget, setShowCustomBudget] = useState(false)
 
@@ -44,7 +44,6 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
         break
       case 'contact':
         if (!value.trim()) return 'Контакт обязателен'
-        // Check if it's an email (not Telegram handle starting with @)
         if (!value.startsWith('@') && !validateEmail(value)) {
           return 'Введите корректный email или Telegram (@username)'
         }
@@ -61,8 +60,7 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target
-    
-    // Handle budget selection
+
     if (name === 'budget') {
       if (value === 'Индивидуальный') {
         setShowCustomBudget(true)
@@ -76,7 +74,6 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
       setFormData((prev) => ({ ...prev, [name]: value }))
     }
 
-    // Validate on change if field was touched
     if (touched[name]) {
       const error = validateField(name as keyof ContactFormData, value)
       setErrors((prev) => ({ ...prev, [name]: error }))
@@ -85,7 +82,6 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
 
   const handleCustomBudgetChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
-    // Only allow numbers
     if (value === '' || /^\d+$/.test(value)) {
       setCustomBudget(value)
       setFormData((prev) => ({ ...prev, budget: value }))
@@ -102,7 +98,6 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    // Validate all fields
     const newErrors: ValidationErrors = {}
     Object.keys(formData).forEach((key) => {
       const error = validateField(
@@ -120,21 +115,18 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
       description: true,
     })
 
-    // If no errors, submit
     if (Object.keys(newErrors).length === 0) {
       setIsSubmitting(true)
       setSubmitMessage(null)
 
       try {
-        // Track form submission
         trackFormSubmission(
           'contact-form',
           formData.name,
           formData.contact,
           formData.description
-        );
+        )
 
-        // Send to API
         const response = await fetch('/api/contacts', {
           method: 'POST',
           headers: {
@@ -145,14 +137,13 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
             email: formData.contact,
             message: `Budget: ${formData.budget}\n\n${formData.description}`
           })
-        });
+        })
 
-        const data = await response.json();
+        const data = await response.json()
 
         if (data.success) {
-          setSubmitMessage({ type: 'success', text: 'Сообщение отправлено! Мы свяжемся с вами в ближайшее время.' });
-          
-          // Reset form
+          setSubmitMessage({ type: 'success', text: 'Сообщение отправлено! Свяжусь с вами в ближайшее время.' })
+
           setFormData({
             name: '',
             contact: '',
@@ -162,16 +153,16 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
           setTouched({})
           setShowCustomBudget(false)
           setCustomBudget('')
-          
+
           if (onSubmit) {
             onSubmit(formData)
           }
         } else {
-          setSubmitMessage({ type: 'error', text: data.error || 'Ошибка отправки. Попробуйте позже.' });
+          setSubmitMessage({ type: 'error', text: data.error || 'Ошибка отправки. Попробуйте позже.' })
         }
       } catch (error) {
-        console.error('Form submission error:', error);
-        setSubmitMessage({ type: 'error', text: 'Ошибка отправки. Проверьте подключение к интернету.' });
+        console.error('Form submission error:', error)
+        setSubmitMessage({ type: 'error', text: 'Ошибка отправки. Проверьте подключение к интернету.' })
       } finally {
         setIsSubmitting(false)
       }
@@ -179,67 +170,84 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
   }
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form className={styles.form} onSubmit={handleSubmit} noValidate>
       {submitMessage && (
-        <div className={`${styles.message} ${submitMessage.type === 'success' ? styles.messageSuccess : styles.messageError}`}>
-          {submitMessage.text}
+        <div
+          className={`${styles.message} ${
+            submitMessage.type === 'success' ? styles.messageSuccess : styles.messageError
+          }`}
+          role="status"
+        >
+          <span className="material-symbols-outlined" aria-hidden="true">
+            {submitMessage.type === 'success' ? 'check_circle' : 'error'}
+          </span>
+          <span>{submitMessage.text}</span>
         </div>
       )}
-      
-      <div className={styles.field}>
-        <label htmlFor="name" className={styles.label}>
-          ИМЯ
-        </label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          onBlur={() => handleBlur('name')}
-          className={`${styles.input} ${errors.name && touched.name ? styles.inputError : ''}`}
-          placeholder="Ваше имя"
-        />
-        {errors.name && touched.name && (
-          <span className={styles.error}>{errors.name}</span>
-        )}
-      </div>
 
-      <div className={styles.field}>
-        <label htmlFor="contact" className={styles.label}>
-          EMAIL / TELEGRAM
-        </label>
-        <input
-          type="text"
-          id="contact"
-          name="contact"
-          value={formData.contact}
-          onChange={handleChange}
-          onBlur={() => handleBlur('contact')}
-          className={`${styles.input} ${errors.contact && touched.contact ? styles.inputError : ''}`}
-          placeholder="email@example.com или @username"
-        />
-        {errors.contact && touched.contact && (
-          <span className={styles.error}>{errors.contact}</span>
-        )}
+      <div className={`${styles.field} ${styles.fieldRow}`}>
+        <div className={styles.fieldInner}>
+          <label htmlFor="name" className={styles.label}>
+            Имя
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            onBlur={() => handleBlur('name')}
+            className={`${styles.input} ${errors.name && touched.name ? styles.inputError : ''}`}
+            placeholder="Как к вам обращаться"
+            autoComplete="name"
+          />
+          {errors.name && touched.name && (
+            <span className={styles.error}>{errors.name}</span>
+          )}
+        </div>
+
+        <div className={styles.fieldInner}>
+          <label htmlFor="contact" className={styles.label}>
+            Email / Telegram
+          </label>
+          <input
+            type="text"
+            id="contact"
+            name="contact"
+            value={formData.contact}
+            onChange={handleChange}
+            onBlur={() => handleBlur('contact')}
+            className={`${styles.input} ${errors.contact && touched.contact ? styles.inputError : ''}`}
+            placeholder="email@example.com или @username"
+            autoComplete="email"
+          />
+          {errors.contact && touched.contact && (
+            <span className={styles.error}>{errors.contact}</span>
+          )}
+        </div>
       </div>
 
       <div className={styles.field}>
         <label htmlFor="budget" className={styles.label}>
-          БЮДЖЕТ
+          Бюджет
         </label>
-        <select
-          id="budget"
-          name="budget"
-          value={showCustomBudget ? 'Индивидуальный' : formData.budget}
-          onChange={handleChange}
-          className={styles.select}
-        >
-          <option value="1000-5000">1 000 - 5 000 ₽</option>
-          <option value="5000-10000">5 000 - 10 000 ₽</option>
-          <option value="10000-50000">10 000 - 50 000 ₽</option>
-          <option value="Индивидуальный">Индивидуальный</option>
-        </select>
+        <div className={styles.selectWrap}>
+          <select
+            id="budget"
+            name="budget"
+            value={showCustomBudget ? 'Индивидуальный' : formData.budget}
+            onChange={handleChange}
+            className={styles.select}
+          >
+            <option value="1000-5000">1 000 — 5 000 ₽</option>
+            <option value="5000-10000">5 000 — 10 000 ₽</option>
+            <option value="10000-50000">10 000 — 50 000 ₽</option>
+            <option value="Индивидуальный">Индивидуальный</option>
+          </select>
+          <span className="material-symbols-outlined" aria-hidden="true">
+            expand_more
+          </span>
+        </div>
         {showCustomBudget && (
           <input
             type="text"
@@ -247,14 +255,14 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
             onChange={handleCustomBudgetChange}
             className={`${styles.input} ${styles.customBudgetInput}`}
             placeholder="Введите сумму в рублях"
-            style={{ marginTop: '10px' }}
+            autoFocus
           />
         )}
       </div>
 
       <div className={styles.field}>
         <label htmlFor="description" className={styles.label}>
-          ОПИСАНИЕ ПРОЕКТА
+          О проекте
         </label>
         <textarea
           id="description"
@@ -263,16 +271,38 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
           onChange={handleChange}
           onBlur={() => handleBlur('description')}
           className={`${styles.textarea} ${errors.description && touched.description ? styles.inputError : ''}`}
-          placeholder="Расскажите о вашем проекте..."
+          placeholder="Расскажите о вашем проекте — что нужно сделать, какие цели, сроки..."
           rows={6}
         />
-        {errors.description && touched.description && (
-          <span className={styles.error}>{errors.description}</span>
-        )}
+        <div className={styles.textareaMeta}>
+          {errors.description && touched.description ? (
+            <span className={styles.error}>{errors.description}</span>
+          ) : (
+            <span className={styles.charCount}>
+              {formData.description.length}/1000
+            </span>
+          )}
+        </div>
       </div>
 
-      <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
-        {isSubmitting ? 'ОТПРАВКА...' : 'ОТПРАВИТЬ'}
+      <button
+        type="submit"
+        className={styles.submitButton}
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <>
+            <span className={styles.spinner} aria-hidden="true" />
+            Отправка...
+          </>
+        ) : (
+          <>
+            Отправить заявку
+            <span className="material-symbols-outlined" aria-hidden="true">
+              arrow_forward
+            </span>
+          </>
+        )}
       </button>
     </form>
   )

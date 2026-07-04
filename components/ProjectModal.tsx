@@ -20,10 +20,8 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
   const footerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Prevent body scroll when modal is open
     document.body.style.overflow = 'hidden';
-    
-    // Handle ESC key
+
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (lightboxImage) {
@@ -34,54 +32,44 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
       }
     };
     window.addEventListener('keydown', handleEsc);
-    
-    // Show button after modal animation completes
-    setTimeout(() => {
+
+    const timer = setTimeout(() => {
       setIsReady(true);
       setShowFloatingButton(true);
-    }, 500);
-    
+    }, 400);
+
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
       window.removeEventListener('keydown', handleEsc);
+      clearTimeout(timer);
     };
   }, [onClose, lightboxImage]);
 
   useEffect(() => {
     if (!isReady) return;
-    
-    // Check if footer is visible
+
     const handleScroll = () => {
       if (!modalRef.current || !footerRef.current) return;
-
       const footerRect = footerRef.current.getBoundingClientRect();
-      
-      // Calculate if footer is in the visible viewport
-      // Footer is visible when its top is above the bottom of the viewport
       const viewportHeight = window.innerHeight;
-      const isFooterVisible = footerRect.top < viewportHeight - 100; // 100px threshold
-      
+      const isFooterVisible = footerRect.top < viewportHeight - 100;
       setShowFloatingButton(!isFooterVisible);
     };
 
     const modal = modalRef.current;
     if (modal) {
-      modal.addEventListener('scroll', handleScroll);
-      // Check initial state
+      modal.addEventListener('scroll', handleScroll, { passive: true });
       handleScroll();
     }
 
     return () => {
-      if (modal) {
-        modal.removeEventListener('scroll', handleScroll);
-      }
+      if (modal) modal.removeEventListener('scroll', handleScroll);
     };
   }, [isReady]);
 
   // Parse images from JSON
   let galleryImages: string[] = [];
   if (project.images) {
-    // Check if images is already an array or a string
     if (Array.isArray(project.images)) {
       galleryImages = project.images;
     } else if (typeof project.images === 'string') {
@@ -93,100 +81,151 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
       }
     }
   }
-  
-  // If no gallery images, use main image
+
   if (galleryImages.length === 0 && project.image) {
     galleryImages = [project.image];
   }
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()} ref={modalRef}>
-        {/* Close button */}
-        <button 
+    <div
+      className={`${styles.overlay} ${isReady ? styles.overlayReady : ''}`}
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Проект: ${project.title}`}
+    >
+      <div
+        className={styles.modal}
+        onClick={(e) => e.stopPropagation()}
+        ref={modalRef}
+      >
+        <button
           className={styles.closeButton}
           onClick={onClose}
-          aria-label="Close"
+          aria-label="Закрыть"
         >
           <span className="material-symbols-outlined">close</span>
         </button>
 
-        {/* Floating CTA Button */}
-        <Link 
-          href="/contact" 
-          className={`${styles.floatingCta} ${showFloatingButton ? styles.floatingCtaVisible : styles.floatingCtaHidden}`}
+        <Link
+          href="/contact"
+          className={`${styles.floatingCta} ${
+            showFloatingButton ? styles.floatingCtaVisible : styles.floatingCtaHidden
+          }`}
         >
           <span className="material-symbols-outlined">arrow_forward</span>
           <span>Заказать</span>
         </Link>
 
-        {/* Content */}
         <div className={styles.content}>
+          {/* Hero image */}
+          {galleryImages[0] && (
+            <div className={styles.heroImageWrap}>
+              {!loadedImages.has(0) && (
+                <div className={styles.imageSkeleton} aria-hidden="true" />
+              )}
+              <Image
+                src={galleryImages[0]}
+                alt={`${project.title} — обложка`}
+                width={1600}
+                height={900}
+                className={`${styles.heroImage} ${
+                  loadedImages.has(0) ? styles.imageLoaded : styles.imageLoading
+                }`}
+                onLoad={() =>
+                  setLoadedImages((prev) => new Set(prev).add(0))
+                }
+                priority
+              />
+            </div>
+          )}
+
           {/* Header */}
           <div className={styles.header}>
-            <h2 className={styles.title}>{project.title}</h2>
-            <div className={styles.metadata}>
-              <span className={styles.badge}>{project.category}</span>
-              <span className={styles.badge}>{project.year}</span>
+            <div className={styles.headerMeta}>
+              <span className={styles.category}>{project.category}</span>
+              <span className={styles.year}>{project.year}</span>
             </div>
+            <h2 className={styles.title}>{project.title}</h2>
+            <p className={styles.description}>{project.description}</p>
           </div>
 
-          {/* Description */}
-          <p className={styles.description}>{project.description}</p>
+          {/* Gallery (rest of images) */}
+          {galleryImages.length > 1 && (
+            <div className={styles.gallery}>
+              {galleryImages.slice(1).map((img, index) => {
+                const realIndex = index + 1;
+                return (
+                  <div
+                    key={realIndex}
+                    className={styles.imageWrapper}
+                    onClick={() => setLightboxImage(img)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {!loadedImages.has(realIndex) && (
+                      <div className={styles.imageSkeleton} aria-hidden="true" />
+                    )}
+                    <Image
+                      src={img}
+                      alt={`${project.title} — изображение ${realIndex + 1}`}
+                      width={1200}
+                      height={800}
+                      className={`${styles.image} ${
+                        loadedImages.has(realIndex)
+                          ? styles.imageLoaded
+                          : styles.imageLoading
+                      }`}
+                      onLoad={() =>
+                        setLoadedImages((prev) => new Set(prev).add(realIndex))
+                      }
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
-          {/* Gallery */}
-          <div className={styles.gallery}>
-            {galleryImages.map((img, index) => (
-              <div 
-                key={index} 
-                className={styles.imageWrapper}
-                onClick={() => setLightboxImage(img)}
-                style={{ cursor: 'pointer' }}
-              >
-                {!loadedImages.has(index) && (
-                  <div className={styles.imageSkeleton} aria-hidden="true" />
-                )}
-                <Image
-                  src={img}
-                  alt={`${project.title} - Image ${index + 1}`}
-                  width={1200}
-                  height={800}
-                  className={`${styles.image} ${loadedImages.has(index) ? styles.imageLoaded : styles.imageLoading}`}
-                  onLoad={() => setLoadedImages(prev => new Set(prev).add(index))}
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* CTA Button */}
+          {/* CTA footer */}
           <div className={styles.footer} ref={footerRef}>
-            <Link href="/contact" className={styles.ctaButton}>
-              ЗАКАЗАТЬ ПРОЕКТ
-            </Link>
+            <div className={styles.footerInner}>
+              <div className={styles.footerText}>
+                <h3 className={styles.footerTitle}>Понравился проект?</h3>
+                <p className={styles.footerDescription}>
+                  Давайте создадим что-то похожее для вас.
+                </p>
+              </div>
+              <Link href="/contact" className={styles.ctaButton}>
+                Заказать проект
+                <span className="material-symbols-outlined">arrow_forward</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Lightbox */}
       {lightboxImage && (
-        <div 
-          className={styles.lightbox} 
+        <div
+          className={styles.lightbox}
           onClick={(e) => {
             e.stopPropagation();
             setLightboxImage(null);
           }}
         >
-          <button 
+          <button
             className={styles.lightboxClose}
             onClick={(e) => {
               e.stopPropagation();
               setLightboxImage(null);
             }}
-            aria-label="Close lightbox"
+            aria-label="Закрыть увеличенное изображение"
           >
             <span className="material-symbols-outlined">close</span>
           </button>
-          <div className={styles.lightboxContent} onClick={(e) => e.stopPropagation()}>
+          <div
+            className={styles.lightboxContent}
+            onClick={(e) => e.stopPropagation()}
+          >
             <Image
               src={lightboxImage}
               alt={project.title}

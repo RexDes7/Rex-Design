@@ -1,3 +1,5 @@
+'use client';
+
 import { Skill } from '@/types/skill';
 import styles from '@/styles/SkillCard.module.css';
 
@@ -6,19 +8,20 @@ export interface SkillCardProps {
 }
 
 export default function SkillCard({ skill }: SkillCardProps) {
-  const { name, icon, description, variant = 'light' } = skill;
-
+  const { name, description, variant, icon } = skill;
   return (
-    <div className={`${styles.skillCard} ${variant === 'dark' ? styles.dark : ''}`}>
-      {icon && (
-        <span className={`material-symbols-outlined ${styles.icon}`}>
-          {icon}
+    <article
+      className={`${styles.card} ${variant === 'dark' ? styles.dark : ''}`}
+    >
+      <div className={styles.iconWrap} aria-hidden="true">
+        <span className="material-symbols-outlined">
+          {icon || 'auto_awesome'}
         </span>
-      )}
-      <span className={styles.name}>{name}</span>
-      {description && (
-        <p className={styles.description}>{description}</p>
-      )}
-    </div>
+      </div>
+      <div className={styles.content}>
+        <h3 className={styles.title}>{name}</h3>
+        {description && <p className={styles.description}>{description}</p>}
+      </div>
+    </article>
   );
 }
