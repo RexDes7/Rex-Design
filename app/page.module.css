@@ -72,7 +72,7 @@
 .heroContainer {
   position: relative;
   z-index: 1;
-  max-width: var(--container-wide);
+  max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--space-lg);
   display: grid;
@@ -141,7 +141,7 @@
 }
 
 .statsContainer {
-  max-width: var(--container-wide);
+  max-width: var(--container-max);
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(2, 1fr);

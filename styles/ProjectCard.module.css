@@ -128,7 +128,7 @@
 /* ---------- Content ---------- */
 
 .content {
-  padding: 1.25rem 0.25rem 0.5rem;
+  padding: 1.25rem 0 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -240,7 +240,7 @@
 }
 
 .variant_hero .content {
-  padding: 1.75rem 0.5rem 0.5rem;
+  padding: 1.75rem 0 0.5rem;
 }
 
 .variant_hero .title {
@@ -263,7 +263,7 @@
 
 @media (max-width: 768px) {
   .content {
-    padding: 1rem 0.25rem 0.25rem;
+    padding: 1rem 0 0.25rem;
   }
 
   .variant_hero .imageContainer {
@@ -271,6 +271,6 @@
   }
 
   .variant_hero .content {
-    padding: 1.25rem 0.25rem 0.25rem;
+    padding: 1.25rem 0 0.25rem;
   }
 }

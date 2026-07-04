@@ -29,7 +29,7 @@
 .container {
   height: 100%;
   width: 100%;
-  max-width: var(--container-wide);
+  max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--space-lg);
   display: flex;

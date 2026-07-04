@@ -56,7 +56,7 @@
 .heroContainer {
   position: relative;
   z-index: 1;
-  max-width: var(--container-wide);
+  max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--space-lg);
   display: flex;
@@ -99,7 +99,7 @@
 }
 
 .filterContainer {
-  max-width: var(--container-wide);
+  max-width: var(--container-max);
   margin: 0 auto;
   padding: var(--space-sm) var(--space-lg);
 }
@@ -173,7 +173,7 @@
 }
 
 .projectsContainer {
-  max-width: var(--container-wide);
+  max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--space-lg);
 }
@@ -204,17 +204,16 @@
     grid-column: span 12;
   }
 
-  /* Pattern repeats every 6 */
-  /* Wide cards — span 8 */
-  .projectsGrid > *:nth-child(6n + 2),
-  .projectsGrid > *:nth-child(6n + 5) {
-    grid-column: span 8;
+  /* 2-card rows (6 + 6): positions 2,3 / 7,8 / 12,13 / 17,18 ... */
+  .projectsGrid > *:nth-child(5n + 2),
+  .projectsGrid > *:nth-child(5n + 3) {
+    grid-column: span 6;
   }
 
-  /* Standard cards — span 4 */
-  .projectsGrid > *:nth-child(6n + 3),
-  .projectsGrid > *:nth-child(6n + 4),
-  .projectsGrid > *:nth-child(6n + 6) {
+  /* 3-card rows (4 + 4 + 4): positions 4,5,6 / 9,10,11 / 14,15,16 ... */
+  .projectsGrid > *:nth-child(5n + 4),
+  .projectsGrid > *:nth-child(5n + 5),
+  .projectsGrid > *:nth-child(5n + 6) {
     grid-column: span 4;
   }
 }
@@ -313,7 +312,7 @@
 }
 
 .ctaContainer {
-  max-width: var(--container-wide);
+  max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--space-lg);
   display: flex;

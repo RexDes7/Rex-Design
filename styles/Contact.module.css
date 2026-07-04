@@ -56,7 +56,7 @@
 .heroContainer {
   position: relative;
   z-index: 1;
-  max-width: var(--container-wide);
+  max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--space-lg);
 }
@@ -120,7 +120,7 @@
 }
 
 .contentContainer {
-  max-width: var(--container-wide);
+  max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--space-lg);
   display: grid;
