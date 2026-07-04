@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import ContactForm from '@/components/ContactForm';
+import SectionLabel from '@/components/SectionLabel';
+import { FadeInWhenVisible } from '@/components/animations';
 import styles from '@/styles/Contact.module.css';
 
 interface ContactData {
@@ -10,16 +11,14 @@ interface ContactData {
   telegram: string;
   phone?: string;
   behance?: string;
-  dribbble?: string;
 }
 
 export default function ContactPage() {
   const [contacts, setContacts] = useState<ContactData>({
-    email: 'hello@archive24.ru',
-    telegram: '@archive24',
-    phone: '+7 (999) 123-45-67'
+    email: 'rafaelaparyan@yandex.ru',
+    telegram: '@RLC_W',
+    phone: '+7 902 212 10 44',
   });
-  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -37,114 +36,183 @@ export default function ContactPage() {
     fetchContacts();
   }, []);
 
+  const telegramUrl = contacts.telegram?.startsWith('http')
+    ? contacts.telegram
+    : `https://t.me/${contacts.telegram?.replace('@', '')}`;
+
   return (
     <main id="main-content" className={styles.main}>
-      {/* Hero Section */}
+      {/* ===================================================== */}
+      {/* HERO */}
+      {/* ===================================================== */}
       <section className={styles.hero}>
-        <h1 className={styles.heroTitle}>
-          ДАВАЙТЕ <br /> <span className={styles.accent}>РАБОТАТЬ</span>
-        </h1>
-        <p className={styles.heroDescription}>
-          Мы выполним ваш проект в лучшем виде из всех возможных. Оставьте заявку ниже и мы свяжемся с вами в кратчайшие сроки.
-        </p>
+        <div className={styles.heroBg} aria-hidden="true">
+          <div className={styles.heroBlob} />
+          <div className={styles.heroGrid} />
+        </div>
+
+        <div className={styles.heroContainer}>
+          <FadeInWhenVisible variant="slideUp">
+            <div className={styles.heroContent}>
+              <SectionLabel number="01">Контакты</SectionLabel>
+              <h1 className={styles.heroTitle}>
+                Давайте создадим
+                <br />
+                <span className={styles.accent}>что-то стоящее</span>
+              </h1>
+              <p className={styles.heroSubtitle}>
+                Открыт к новым проектам с 2020 года. Расскажите о задаче —
+                отвечу в течение 24 часов с предварительной оценкой.
+              </p>
+              <div className={styles.availability}>
+                <span className={styles.availabilityDot} aria-hidden="true" />
+                <span>Свободен для новых проектов</span>
+              </div>
+            </div>
+          </FadeInWhenVisible>
+        </div>
       </section>
 
-      {/* Content Grid - Form and Sidebar */}
-      <div className={styles.container}>
-        <div className={styles.contentGrid}>
-          {/* Form Section - 8 columns */}
-          <div className={styles.formSection}>
-            <ContactForm />
-          </div>
-
-          {/* Sidebar Section - 4 columns */}
-          <aside className={styles.sidebar}>
-            {/* Contact Information */}
-            <div className={styles.contactInfo}>
-              <h2 className={styles.sidebarTitle}>КОНТАКТЫ</h2>
-              
-              {contacts.email && (
-                <div className={styles.contactItem}>
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    mail
-                  </span>
-                  <div>
-                    <p className={styles.contactLabel}>EMAIL</p>
-                    <a href={`mailto:${contacts.email}`} className={styles.contactLink}>
-                      {contacts.email}
-                    </a>
-                  </div>
-                </div>
-              )}
-
-              {contacts.telegram && (
-                <div className={styles.contactItem}>
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    send
-                  </span>
-                  <div>
-                    <p className={styles.contactLabel}>TELEGRAM</p>
-                    <a 
-                      href={contacts.telegram.startsWith('http') ? contacts.telegram : `https://t.me/${contacts.telegram.replace('@', '')}`} 
-                      className={styles.contactLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <span className={styles.numberFont}>
-                        {(() => {
-                          // Extract username from URL or use as-is
-                          if (contacts.telegram.startsWith('http')) {
-                            const username = contacts.telegram.split('/').pop() || '';
-                            return `@${username}`;
-                          }
-                          return contacts.telegram.startsWith('@') ? contacts.telegram : `@${contacts.telegram}`;
-                        })()}
-                      </span>
-                    </a>
-                  </div>
-                </div>
-              )}
-
-              {contacts.phone && (
-                <div className={styles.contactItem}>
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    call
-                  </span>
-                  <div>
-                    <p className={styles.contactLabel}>ТЕЛЕФОН</p>
-                    <a href={`tel:${contacts.phone.replace(/\s/g, '')}`} className={styles.contactLink}>
-                      <span className={styles.numberFont}>{contacts.phone}</span>
-                    </a>
-                  </div>
-                </div>
-              )}
+      {/* ===================================================== */}
+      {/* CONTENT GRID: form + sidebar */}
+      {/* ===================================================== */}
+      <section className={styles.contentSection}>
+        <div className={styles.contentContainer}>
+          {/* Form column */}
+          <FadeInWhenVisible variant="slideUp">
+            <div className={styles.formColumn}>
+              <SectionLabel number="02">Бриф</SectionLabel>
+              <h2 className={styles.formTitle}>
+                Расскажите<br />
+                <span className={styles.accent}>о проекте</span>
+              </h2>
+              <p className={styles.formText}>
+                Чем подробнее вы опишете задачу, тем точнее я смогу оценить
+                сроки и стоимость. Все поля обязательны, кроме бюджета.
+              </p>
+              <ContactForm />
             </div>
+          </FadeInWhenVisible>
 
-            {/* Workspace Image */}
-            <div className={styles.workspaceContainer}>
-              {!imageLoaded && (
-                <div className={styles.imageSkeleton} aria-hidden="true" />
-              )}
-              <Image
-                src="/images/portrait.svg"
-                alt="Рабочее пространство"
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className={`${styles.workspaceImage} ${imageLoaded ? styles.imageLoaded : styles.imageLoading}`}
-                onLoad={() => setImageLoaded(true)}
-              />
-            </div>
+          {/* Sidebar */}
+          <FadeInWhenVisible variant="slideUp" delay={0.15}>
+            <aside className={styles.sidebar}>
+              {/* Direct contacts */}
+              <div className={styles.sidebarBlock}>
+                <h3 className={styles.sidebarTitle}>Прямой контакт</h3>
+                <ul className={styles.contactList}>
+                  {contacts.email && (
+                    <li>
+                      <a
+                        href={`mailto:${contacts.email}`}
+                        className={styles.contactItem}
+                      >
+                        <div className={styles.contactIcon}>
+                          <span className="material-symbols-outlined" aria-hidden="true">
+                            mail
+                          </span>
+                        </div>
+                        <div className={styles.contactInfo}>
+                          <span className={styles.contactLabel}>Email</span>
+                          <span className={styles.contactValue}>
+                            {contacts.email}
+                          </span>
+                        </div>
+                        <span className={styles.contactArrow} aria-hidden="true">
+                          <span className="material-symbols-outlined">
+                            arrow_outward
+                          </span>
+                        </span>
+                      </a>
+                    </li>
+                  )}
 
-            {/* Quote Section */}
-            <div className={styles.quoteSection}>
-              <blockquote className={styles.quote}>
-                &ldquo;Дизайн — это не то, как это выглядит. Дизайн — это то, как это работает.&rdquo;
-              </blockquote>
-              <cite className={styles.quoteAttribution}>— Стив Джобс</cite>
-            </div>
-          </aside>
+                  {contacts.telegram && (
+                    <li>
+                      <a
+                        href={telegramUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.contactItem}
+                      >
+                        <div className={styles.contactIcon}>
+                          <span className="material-symbols-outlined" aria-hidden="true">
+                            send
+                          </span>
+                        </div>
+                        <div className={styles.contactInfo}>
+                          <span className={styles.contactLabel}>Telegram</span>
+                          <span className={styles.contactValue}>
+                            {contacts.telegram.startsWith('http')
+                              ? `@${contacts.telegram.split('/').pop()}`
+                              : contacts.telegram}
+                          </span>
+                        </div>
+                        <span className={styles.contactArrow} aria-hidden="true">
+                          <span className="material-symbols-outlined">
+                            arrow_outward
+                          </span>
+                        </span>
+                      </a>
+                    </li>
+                  )}
+
+                  {contacts.phone && (
+                    <li>
+                      <a
+                        href={`tel:${contacts.phone.replace(/\s/g, '')}`}
+                        className={styles.contactItem}
+                      >
+                        <div className={styles.contactIcon}>
+                          <span className="material-symbols-outlined" aria-hidden="true">
+                            call
+                          </span>
+                        </div>
+                        <div className={styles.contactInfo}>
+                          <span className={styles.contactLabel}>Телефон</span>
+                          <span className={styles.contactValue}>
+                            {contacts.phone}
+                          </span>
+                        </div>
+                        <span className={styles.contactArrow} aria-hidden="true">
+                          <span className="material-symbols-outlined">
+                            arrow_outward
+                          </span>
+                        </span>
+                      </a>
+                    </li>
+                  )}
+                </ul>
+              </div>
+
+              {/* Response time card */}
+              <div className={styles.responseCard}>
+                <div className={styles.responseIcon}>
+                  <span className="material-symbols-outlined">schedule</span>
+                </div>
+                <div>
+                  <h4 className={styles.responseTitle}>Время ответа</h4>
+                  <p className={styles.responseText}>
+                    Обычно отвечаю в течение 24 часов. В рабочее время — быстрее.
+                  </p>
+                </div>
+              </div>
+
+              {/* Quote */}
+              <div className={styles.quoteCard}>
+                <div className={styles.quoteMark} aria-hidden="true">
+                  <span className="material-symbols-outlined">format_quote</span>
+                </div>
+                <blockquote className={styles.quoteText}>
+                  Дизайн — это не то, как это выглядит.
+                  Дизайн — это то, как это работает.
+                </blockquote>
+                <cite className={styles.quoteAuthor}>— Стив Джобс</cite>
+              </div>
+            </aside>
+          </FadeInWhenVisible>
         </div>
-      </div>
+      </section>
     </main>
   );
 }
