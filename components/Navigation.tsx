@@ -6,14 +6,13 @@ import { usePathname } from 'next/navigation';
 import styles from '@/styles/Navigation.module.css';
 import { useTrackClick } from '@/components/AnalyticsTracker';
 
-export interface NavigationProps {
-  // No props needed - component uses usePathname hook
-}
+export interface NavigationProps {}
 
 export default function Navigation() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
+  const [scrolled, setScrolled] = useState(false);
+
   const trackLogoClick = useTrackClick('nav-logo', 'link');
   const trackPortfolioClick = useTrackClick('nav-portfolio', 'link');
   const trackAboutClick = useTrackClick('nav-about', 'link');
@@ -26,7 +25,6 @@ export default function Navigation() {
     { href: '/contact', label: 'Контакты', trackClick: trackContactClick },
   ];
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -38,55 +36,77 @@ export default function Navigation() {
     };
   }, [mobileMenuOpen]);
 
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 24);
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-  const closeMobileMenu = () => {
-    setMobileMenuOpen(false);
-  };
+  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
+  const closeMobileMenu = () => setMobileMenuOpen(false);
 
   return (
-    <header>
+    <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
       <nav className={styles.navigation} aria-label="Main navigation">
-      <div className={styles.container}>
-        <Link href="/" className={styles.logo} onClick={() => { trackLogoClick(); closeMobileMenu(); }}>
-          REX
-        </Link>
+        <div className={styles.container}>
+          <Link
+            href="/"
+            className={styles.logo}
+            onClick={() => { trackLogoClick(); closeMobileMenu(); }}
+          >
+            <span className={styles.logoMark}>R</span>
+            <span className={styles.logoText}>REX</span>
+          </Link>
 
-        {/* Hamburger Button - Mobile Only */}
-        <button
-          className={styles.hamburger}
-          onClick={toggleMobileMenu}
-          aria-label="Toggle mobile menu"
-          aria-expanded={mobileMenuOpen}
-        >
-          <span className={styles.hamburgerLine}></span>
-          <span className={styles.hamburgerLine}></span>
-          <span className={styles.hamburgerLine}></span>
-        </button>
+          <button
+            className={`${styles.hamburger} ${mobileMenuOpen ? styles.hamburgerOpen : ''}`}
+            onClick={toggleMobileMenu}
+            aria-label="Toggle mobile menu"
+            aria-expanded={mobileMenuOpen}
+          >
+            <span className={styles.hamburgerLine}></span>
+            <span className={styles.hamburgerLine}></span>
+            <span className={styles.hamburgerLine}></span>
+          </button>
 
-        {/* Desktop Navigation */}
-        <div className={`${styles.navLinks} ${mobileMenuOpen ? styles.navLinksOpen : ''}`}>
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`${styles.navLink} ${
-                pathname === link.href ? styles.active : ''
-              }`}
-              onClick={() => { link.trackClick(); closeMobileMenu(); }}
-            >
-              {link.label}
-            </Link>
-          ))}
+          <div className={`${styles.navLinks} ${mobileMenuOpen ? styles.navLinksOpen : ''}`}>
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`${styles.navLink} ${
+                  pathname === link.href ? styles.active : ''
+                }`}
+                onClick={() => { link.trackClick(); closeMobileMenu(); }}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          <Link
+            href="/contact"
+            className={styles.ctaButton}
+            onClick={() => { trackCtaClick(); closeMobileMenu(); }}
+          >
+            Заказать
+            <span className="material-symbols-outlined" aria-hidden="true" style={{ fontSize: '1.1rem' }}>
+              arrow_forward
+            </span>
+          </Link>
         </div>
+      </nav>
 
-        <Link href="/contact" className={styles.ctaButton} onClick={() => { trackCtaClick(); closeMobileMenu(); }}>
-          ЗАКАЗАТЬ
-        </Link>
-      </div>
-    </nav>
+      {mobileMenuOpen && (
+        <div
+          className={styles.mobileOverlay}
+          onClick={closeMobileMenu}
+          aria-hidden="true"
+        />
+      )}
     </header>
   );
 }

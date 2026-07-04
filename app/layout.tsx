@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Playfair_Display, Space_Grotesk } from 'next/font/google'
+import { Plus_Jakarta_Sans, Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import MainLayoutWrapper from '@/components/MainLayoutWrapper'
 import AnalyticsTracker from '@/components/AnalyticsTracker'
@@ -9,20 +9,28 @@ import { generateOrganizationSchema, generateWebSiteSchema } from './schema'
 export const fetchCache = 'force-no-store';
 export const revalidate = 0;
 
-const playfairDisplay = Playfair_Display({
-  subsets: ['latin', 'cyrillic'],
-  weight: ['400', '500', '700', '900'],
-  variable: '--font-headline',
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['500', '600', '700', '800'],
+  variable: '--font-plus-jakarta',
   display: 'swap',
   preload: true,
 })
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-numbers',
+const inter = Inter({
+  subsets: ['latin', 'cyrillic'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-inter',
   display: 'swap',
   preload: true,
+})
+
+const jetbrains = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-jetbrains',
+  display: 'swap',
+  preload: false,
 })
 
 export const metadata: Metadata = {
@@ -114,7 +122,7 @@ export default function RootLayout({
   const webSiteSchema = generateWebSiteSchema();
 
   return (
-    <html lang="ru" className={`${playfairDisplay.variable} ${spaceGrotesk.variable}`}>
+    <html lang="ru" className={`${plusJakarta.variable} ${inter.variable} ${jetbrains.variable}`}>
       <head>
         <link
           rel="preconnect"

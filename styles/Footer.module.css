@@ -1,114 +1,230 @@
-/* Premium Footer */
+/* ============================================================
+   Footer — Editorial, large, premium
+   ============================================================ */
+
 .footer {
+  background: var(--bg-dark);
+  color: var(--text-on-dark);
+  padding: var(--space-3xl) 0 var(--space-xl);
   position: relative;
-  background: var(--color-black);
-  border-top: 1px solid rgba(201, 169, 110, 0.1);
-  padding: 4rem 2rem 2rem;
   overflow: hidden;
 }
 
-.container {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-  align-items: center;
-  text-align: center;
-}
-
-/* Branding */
-.branding {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
-
-.logo {
-  font-size: 2rem;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  color: var(--color-white);
-  transition: color 0.3s ease;
-}
-
-.logo:hover {
-  color: var(--color-gold);
-}
-
-/* Social Links */
-.socialLinks {
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.socialLink {
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--color-gray-light);
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.socialLink::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--color-gold);
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.socialLink:hover {
-  color: var(--color-gold);
-}
-
-.socialLink:hover::after {
-  width: 100%;
-}
-
-/* Copyright */
-.copyright {
-  padding-top: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  width: 100%;
-}
-
-.copyright p {
-  font-size: 0.875rem;
-  color: var(--color-gray);
-  letter-spacing: 0.05em;
-}
-
-/* Decorative Element */
 .footer::before {
   content: '';
   position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(201, 169, 110, 0.05) 0%, transparent 70%);
-  filter: blur(80px);
+  top: -200px;
+  right: -150px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(31, 78, 216, 0.18) 0%, transparent 70%);
+  filter: blur(40px);
   pointer-events: none;
 }
 
-/* Responsive */
-@media (max-width: 767px) {
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: var(--container-wide);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+/* ---------- Top grid ---------- */
+
+.topGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl);
+  padding-bottom: var(--space-2xl);
+  border-bottom: 1px solid var(--border-on-dark);
+}
+
+@media (min-width: 769px) {
+  .topGrid {
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: var(--space-xl);
+  }
+}
+
+/* ---------- Label ---------- */
+
+.label {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-on-dark-muted);
+  margin-bottom: var(--space-md);
+}
+
+/* ---------- CTA Block ---------- */
+
+.ctaBlock {
+  max-width: 540px;
+}
+
+.ctaHeading {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--text-on-dark);
+  margin-bottom: var(--space-lg);
+}
+
+.ctaAccent {
+  color: var(--accent-on-dark);
+  font-style: italic;
+}
+
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  background: var(--text-on-dark);
+  color: var(--bg-dark);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  transition: all var(--t-base) var(--ease-out);
+}
+
+.ctaButton:hover {
+  background: var(--accent-on-dark);
+  color: var(--bg-dark);
+  transform: translateY(-2px);
+}
+
+.ctaButton .material-symbols-outlined {
+  transition: transform var(--t-base) var(--ease-out);
+}
+
+.ctaButton:hover .material-symbols-outlined {
+  transform: translateX(3px);
+}
+
+/* ---------- Nav blocks ---------- */
+
+.navBlock,
+.socialBlock {
+  min-width: 0;
+}
+
+.navList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.navList a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-on-dark);
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.25rem 0;
+  transition: color var(--t-fast) var(--ease-base),
+              transform var(--t-fast) var(--ease-base);
+}
+
+.navList a:hover {
+  color: var(--accent-on-dark);
+  transform: translateX(3px);
+}
+
+.navList a .material-symbols-outlined {
+  font-size: 1.125rem;
+  opacity: 0.7;
+}
+
+/* ---------- Bottom bar ---------- */
+
+.bottomBar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-top: var(--space-xl);
+}
+
+@media (min-width: 769px) {
+  .bottomBar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-lg);
+  }
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  color: var(--text-on-dark);
+  transition: color var(--t-fast) var(--ease-base);
+}
+
+.logo:hover {
+  color: var(--text-on-dark);
+}
+
+.logoMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--text-on-dark);
+  color: var(--bg-dark);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  transition: transform var(--t-base) var(--ease-out);
+}
+
+.logo:hover .logoMark {
+  transform: rotate(-6deg);
+}
+
+.copyright,
+.credit {
+  font-size: 0.8125rem;
+  color: var(--text-on-dark-muted);
+  letter-spacing: 0.01em;
+}
+
+.creditAccent {
+  color: var(--text-on-dark);
+  font-weight: 600;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 768px) {
   .footer {
-    padding: 3rem 1.5rem 1.5rem;
+    padding: var(--space-2xl) 0 var(--space-lg);
   }
-  
-  .socialLinks {
-    gap: 1.5rem;
+
+  .container {
+    padding: 0 var(--space-md);
   }
-  
-  .logo {
-    font-size: 1.5rem;
+
+  .topGrid {
+    gap: var(--space-xl);
+    padding-bottom: var(--space-xl);
+  }
+
+  .bottomBar {
+    padding-top: var(--space-lg);
   }
 }
