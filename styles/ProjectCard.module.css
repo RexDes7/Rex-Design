@@ -128,10 +128,10 @@
 /* ---------- Content ---------- */
 
 .content {
-  padding: 1.25rem 0 0.5rem;
+  padding: 1.5rem 0.25rem 0.75rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.625rem;
 }
 
 .metaRow {
@@ -175,7 +175,7 @@
   font-family: var(--font-display);
   font-size: clamp(1.125rem, 1.5vw, 1.375rem);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.25;
   letter-spacing: -0.02em;
   color: var(--text-primary);
   display: -webkit-box;
@@ -191,13 +191,13 @@
 
 .description {
   font-size: var(--text-body-sm);
-  line-height: 1.55;
+  line-height: 1.6;
   color: var(--text-secondary);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  margin-top: 0.25rem;
+  margin-top: 0.125rem;
 }
 
 /* ---------- Variants: aspect ratios ---------- */
@@ -240,7 +240,7 @@
 }
 
 .variant_hero .content {
-  padding: 1.75rem 0 0.5rem;
+  padding: 2rem 0.5rem 1rem;
 }
 
 .variant_hero .title {
@@ -263,7 +263,7 @@
 
 @media (max-width: 768px) {
   .content {
-    padding: 1rem 0 0.25rem;
+    padding: 1.25rem 0.25rem 0.5rem;
   }
 
   .variant_hero .imageContainer {

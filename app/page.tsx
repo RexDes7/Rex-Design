@@ -75,12 +75,10 @@ export default function Home() {
     return () => { isMounted = false }
   }, [])
 
-  // Featured projects: take up to 4
+  // Featured projects: take up to 4 for the Selected Works section
   const featuredProjects = projects.filter(p => p.featured).slice(0, 4)
   // Fallback to first 4 if no featured
-  const displayProjects = featuredProjects.length > 0 ? featuredProjects : projects.slice(0, 4)
-  const heroProject = displayProjects[0]
-  const secondaryProjects = displayProjects.slice(1, 4)
+  const selectedWorks = featuredProjects.length > 0 ? featuredProjects : projects.slice(0, 4)
 
   return (
     <main id="main-content" className={styles.main}>
@@ -121,19 +119,6 @@ export default function Home() {
             </div>
           </FadeInWhenVisible>
 
-          {/* Hero project preview */}
-          {heroProject && (
-            <FadeInWhenVisible variant="slideUp" delay={0.15} duration={animationConfig.durations.slow}>
-              <div className={styles.heroProjectWrap}>
-                <ProjectCard
-                  project={heroProject}
-                  onClick={() => setSelectedProject(heroProject)}
-                  variant="hero"
-                  index={0}
-                />
-              </div>
-            </FadeInWhenVisible>
-          )}
         </div>
 
         {/* Stats strip */}
@@ -194,7 +179,7 @@ export default function Home() {
       {/* ===================================================== */}
       {/* SELECTED WORKS */}
       {/* ===================================================== */}
-      {secondaryProjects.length > 0 && (
+      {selectedWorks.length > 0 && (
         <section className={`${styles.section} ${styles.sectionSecondary}`}>
           <div className="container">
             <div className={styles.sectionHeader}>
@@ -221,7 +206,7 @@ export default function Home() {
               staggerDelay={animationConfig.stagger.cards}
               className={styles.worksGrid}
             >
-              {secondaryProjects.map((project, i) => (
+              {selectedWorks.map((project, i) => (
                 <FadeInWhenVisible
                   key={project.id}
                   variant="slideUp"
@@ -231,7 +216,7 @@ export default function Home() {
                     project={project}
                     onClick={() => setSelectedProject(project)}
                     variant="standard"
-                    index={i + 1}
+                    index={i}
                   />
                 </FadeInWhenVisible>
               ))}
