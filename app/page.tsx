@@ -160,31 +160,33 @@ export default function Home() {
             <FadeInWhenVisible variant="slideUp">
               <SectionLabel number="02">Обо мне</SectionLabel>
             </FadeInWhenVisible>
-            <FadeInWhenVisible variant="slideUp" delay={0.1}>
-              <h2 className={styles.introHeading}>
-                Я не агентство.
-                <br />
-                Я — дизайнер, с которым
-                <br />
-                <span className={styles.accent}>говорят на одном языке</span>.
-              </h2>
-            </FadeInWhenVisible>
-            <FadeInWhenVisible variant="slideUp" delay={0.2}>
-              <p className={styles.introText}>
-                Шесть лет в дизайне, 50+ завершённых проектов — от логотипа для
-                локальной кофейни до редизайна сайта логистической компании.
-                Я работаю один, без менеджеров и junior-ов, поэтому вы общаетесь
-                напрямую с человеком, который делает ваш проект.
-              </p>
-            </FadeInWhenVisible>
-            <FadeInWhenVisible variant="slideUp" delay={0.3}>
-              <Link href="/about" className={styles.introLink}>
-                Больше обо мне
-                <span className="material-symbols-outlined" aria-hidden="true">
-                  arrow_forward
-                </span>
-              </Link>
-            </FadeInWhenVisible>
+            <div className={styles.introContent}>
+              <FadeInWhenVisible variant="slideUp" delay={0.1}>
+                <h2 className={styles.introHeading}>
+                  Я не агентство.
+                  <br />
+                  Я — дизайнер, с которым
+                  <br />
+                  <span className={styles.accent}>говорят на одном языке</span>.
+                </h2>
+              </FadeInWhenVisible>
+              <FadeInWhenVisible variant="slideUp" delay={0.2}>
+                <p className={styles.introText}>
+                  Шесть лет в дизайне, 50+ завершённых проектов — от логотипа для
+                  локальной кофейни до редизайна сайта логистической компании.
+                  Я работаю один, без менеджеров и junior-ов, поэтому вы общаетесь
+                  напрямую с человеком, который делает ваш проект.
+                </p>
+              </FadeInWhenVisible>
+              <FadeInWhenVisible variant="slideUp" delay={0.3}>
+                <Link href="/about" className={styles.introLink}>
+                  Больше обо мне
+                  <span className="material-symbols-outlined" aria-hidden="true">
+                    arrow_forward
+                  </span>
+                </Link>
+              </FadeInWhenVisible>
+            </div>
           </div>
         </div>
       </section>
@@ -228,7 +230,7 @@ export default function Home() {
                   <ProjectCard
                     project={project}
                     onClick={() => setSelectedProject(project)}
-                    variant={i === 0 ? 'wide' : 'standard'}
+                    variant="standard"
                     index={i + 1}
                   />
                 </FadeInWhenVisible>

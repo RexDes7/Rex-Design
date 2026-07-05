@@ -274,6 +274,14 @@
   }
 }
 
+
+.storyContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-width: 0;
+}
+
 .storyText {
   display: flex;
   flex-direction: column;

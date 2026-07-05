@@ -304,6 +304,14 @@
   }
 }
 
+
+.introContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-width: 0;
+}
+
 .introHeading {
   font-family: var(--font-display);
   font-size: var(--text-h2);

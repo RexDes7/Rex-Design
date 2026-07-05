@@ -126,32 +126,34 @@ export default function AboutPage() {
             <FadeInWhenVisible variant="slideUp">
               <SectionLabel number="02">История</SectionLabel>
             </FadeInWhenVisible>
-            <FadeInWhenVisible variant="slideUp" delay={0.1}>
-              <h2 className={styles.sectionTitle}>
-                Как я пришёл<br />
-                <span className={styles.accent}>в дизайн</span>
-              </h2>
-            </FadeInWhenVisible>
-            <FadeInWhenVisible variant="slideUp" delay={0.2}>
-              <div className={styles.storyText}>
-                <p>
-                  В 2020 году я начал с простых заказов — логотипы, визитки,
-                  полиграфия для малого бизнеса. Каждый проект учил видеть
-                  задачу клиента: не «нужен логотип», а «нужно, чтобы запомнили».
-                </p>
-                <p>
-                  Через пару лет понял, что плоского дизайна мало — клиенты
-                  пришли из интернета. Начал проектировать сайты, изучать UX,
-                  делать интерфейсы. Параллельно расширил стек: инфографика для
-                  маркетплейсов, 2D-анимация, самописные сайты под ключ.
-                </p>
-                <p>
-                  Сегодня я работаю один, без агентства и junior-ов. Это значит,
-                  что вы общаетесь напрямую с человеком, который делает ваш
-                  проект — от первого наброска до финальных файлов.
-                </p>
-              </div>
-            </FadeInWhenVisible>
+            <div className={styles.storyContent}>
+              <FadeInWhenVisible variant="slideUp" delay={0.1}>
+                <h2 className={styles.sectionTitle}>
+                  Как я пришёл<br />
+                  <span className={styles.accent}>в дизайн</span>
+                </h2>
+              </FadeInWhenVisible>
+              <FadeInWhenVisible variant="slideUp" delay={0.2}>
+                <div className={styles.storyText}>
+                  <p>
+                    В 2020 году я начал с простых заказов — логотипы, визитки,
+                    полиграфия для малого бизнеса. Каждый проект учил видеть
+                    задачу клиента: не «нужен логотип», а «нужно, чтобы запомнили».
+                  </p>
+                  <p>
+                    Через пару лет понял, что плоского дизайна мало — клиенты
+                    пришли из интернета. Начал проектировать сайты, изучать UX,
+                    делать интерфейсы. Параллельно расширил стек: инфографика для
+                    маркетплейсов, 2D-анимация, самописные сайты под ключ.
+                  </p>
+                  <p>
+                    Сегодня я работаю один, без агентства и junior-ов. Это значит,
+                    что вы общаетесь напрямую с человеком, который делает ваш
+                    проект — от первого наброска до финальных файлов.
+                  </p>
+                </div>
+              </FadeInWhenVisible>
+            </div>
           </div>
         </div>
       </section>
