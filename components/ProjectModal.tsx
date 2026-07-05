@@ -13,12 +13,13 @@ interface ProjectModalProps {
 
 export default function ProjectModal({ project, onClose }: ProjectModalProps) {
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
-  const [showFloatingButton, setShowFloatingButton] = useState(false);
+  const [showFloatingButton, setShowFloatingButton] = useState(true);
   const [isReady, setIsReady] = useState(false);
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
 
+  // Lock body scroll + ESC handler
   useEffect(() => {
     document.body.style.overflow = 'hidden';
 
@@ -33,10 +34,8 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
     };
     window.addEventListener('keydown', handleEsc);
 
-    const timer = setTimeout(() => {
-      setIsReady(true);
-      setShowFloatingButton(true);
-    }, 400);
+    // Trigger entrance animation shortly after mount
+    const timer = setTimeout(() => setIsReady(true), 50);
 
     return () => {
       document.body.style.overflow = '';
@@ -45,25 +44,27 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
     };
   }, [onClose, lightboxImage]);
 
+  // Scroll listener — show/hide floating CTA based on footer visibility
   useEffect(() => {
-    if (!isReady) return;
+    const modal = modalRef.current;
+    if (!modal || !footerRef.current) return;
 
     const handleScroll = () => {
-      if (!modalRef.current || !footerRef.current) return;
+      if (!footerRef.current) return;
       const footerRect = footerRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
-      const isFooterVisible = footerRect.top < viewportHeight - 100;
+      // Footer is considered "visible" when its top is above the bottom of viewport
+      // (with a small 80px threshold so button disappears a bit before footer is fully in view)
+      const isFooterVisible = footerRect.top < viewportHeight - 80;
       setShowFloatingButton(!isFooterVisible);
     };
 
-    const modal = modalRef.current;
-    if (modal) {
-      modal.addEventListener('scroll', handleScroll, { passive: true });
-      handleScroll();
-    }
+    modal.addEventListener('scroll', handleScroll, { passive: true });
+    // Initial check
+    handleScroll();
 
     return () => {
-      if (modal) modal.removeEventListener('scroll', handleScroll);
+      modal.removeEventListener('scroll', handleScroll);
     };
   }, [isReady]);
 
@@ -107,18 +108,21 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
           <span className="material-symbols-outlined">close</span>
         </button>
 
+        {/* Floating CTA — visible immediately, hides when footer comes into view */}
         <Link
           href="/contact"
           className={`${styles.floatingCta} ${
             showFloatingButton ? styles.floatingCtaVisible : styles.floatingCtaHidden
           }`}
         >
-          <span className="material-symbols-outlined">arrow_forward</span>
-          <span>Заказать</span>
+          <span>Заказать проект</span>
+          <span className="material-symbols-outlined" aria-hidden="true">
+            arrow_forward
+          </span>
         </Link>
 
         <div className={styles.content}>
-          {/* Header (above all images — like a landing page hero text) */}
+          {/* Header */}
           <div className={styles.header}>
             <div className={styles.headerMeta}>
               <span className={styles.category}>{project.category}</span>
@@ -128,7 +132,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
             <p className={styles.description}>{project.description}</p>
           </div>
 
-          {/* Long-scroll gallery: all images stacked, full width, natural aspect ratio */}
+          {/* Long-scroll gallery */}
           {galleryImages.length > 0 && (
             <div className={styles.gallery}>
               {galleryImages.map((img, index) => {
@@ -180,7 +184,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         </div>
       </div>
 
-      {/* Lightbox (still available on click — for zooming into details) */}
+      {/* Lightbox */}
       {lightboxImage && (
         <div
           className={styles.lightbox}
