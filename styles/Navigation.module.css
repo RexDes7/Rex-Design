@@ -228,6 +228,7 @@
   }
 
   .navLinks {
+    display: flex;
     position: fixed;
     top: var(--nav-height);
     left: 0;
@@ -276,5 +277,13 @@
 @media (max-width: 768px) {
   .container {
     padding: 0 var(--space-md);
+    padding-left: max(var(--space-md), env(safe-area-inset-left));
+    padding-right: max(var(--space-md), env(safe-area-inset-right));
+  }
+
+  .navLinks {
+    padding-left: max(var(--space-lg), env(safe-area-inset-left));
+    padding-right: max(var(--space-lg), env(safe-area-inset-right));
+    padding-top: var(--space-xl);
   }
 }
