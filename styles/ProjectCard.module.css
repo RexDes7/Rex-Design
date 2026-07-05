@@ -128,7 +128,7 @@
 /* ---------- Content ---------- */
 
 .content {
-  padding: 1.5rem 0.25rem 0.75rem;
+  padding: 1.5rem 1.25rem 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
@@ -138,6 +138,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 0.125rem;
 }
 
 .year {
@@ -240,7 +241,7 @@
 }
 
 .variant_hero .content {
-  padding: 2rem 0.5rem 1rem;
+  padding: 2rem 1.5rem 1.5rem;
 }
 
 .variant_hero .title {
@@ -263,7 +264,7 @@
 
 @media (max-width: 768px) {
   .content {
-    padding: 1.25rem 0.25rem 0.5rem;
+    padding: 1.25rem 1rem 1rem;
   }
 
   .variant_hero .imageContainer {
@@ -271,6 +272,6 @@
   }
 
   .variant_hero .content {
-    padding: 1.25rem 0 0.25rem;
+    padding: 1.5rem 1.25rem 1.25rem;
   }
 }
