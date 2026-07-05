@@ -118,29 +118,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         </Link>
 
         <div className={styles.content}>
-          {/* Hero image */}
-          {galleryImages[0] && (
-            <div className={styles.heroImageWrap}>
-              {!loadedImages.has(0) && (
-                <div className={styles.imageSkeleton} aria-hidden="true" />
-              )}
-              <Image
-                src={galleryImages[0]}
-                alt={`${project.title} — обложка`}
-                width={1600}
-                height={900}
-                className={`${styles.heroImage} ${
-                  loadedImages.has(0) ? styles.imageLoaded : styles.imageLoading
-                }`}
-                onLoad={() =>
-                  setLoadedImages((prev) => new Set(prev).add(0))
-                }
-                priority
-              />
-            </div>
-          )}
-
-          {/* Header */}
+          {/* Header (above all images — like a landing page hero text) */}
           <div className={styles.header}>
             <div className={styles.headerMeta}>
               <span className={styles.category}>{project.category}</span>
@@ -150,36 +128,35 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
             <p className={styles.description}>{project.description}</p>
           </div>
 
-          {/* Gallery (rest of images) */}
-          {galleryImages.length > 1 && (
+          {/* Long-scroll gallery: all images stacked, full width, natural aspect ratio */}
+          {galleryImages.length > 0 && (
             <div className={styles.gallery}>
-              {galleryImages.slice(1).map((img, index) => {
-                const realIndex = index + 1;
+              {galleryImages.map((img, index) => {
                 return (
-                  <div
-                    key={realIndex}
-                    className={styles.imageWrapper}
+                  <figure
+                    key={index}
+                    className={styles.galleryItem}
                     onClick={() => setLightboxImage(img)}
-                    style={{ cursor: 'pointer' }}
                   >
-                    {!loadedImages.has(realIndex) && (
+                    {!loadedImages.has(index) && (
                       <div className={styles.imageSkeleton} aria-hidden="true" />
                     )}
                     <Image
                       src={img}
-                      alt={`${project.title} — изображение ${realIndex + 1}`}
-                      width={1200}
-                      height={800}
-                      className={`${styles.image} ${
-                        loadedImages.has(realIndex)
+                      alt={`${project.title} — изображение ${index + 1}`}
+                      width={1600}
+                      height={1000}
+                      className={`${styles.galleryImage} ${
+                        loadedImages.has(index)
                           ? styles.imageLoaded
                           : styles.imageLoading
                       }`}
                       onLoad={() =>
-                        setLoadedImages((prev) => new Set(prev).add(realIndex))
+                        setLoadedImages((prev) => new Set(prev).add(index))
                       }
+                      priority={index === 0}
                     />
-                  </div>
+                  </figure>
                 );
               })}
             </div>
@@ -203,7 +180,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         </div>
       </div>
 
-      {/* Lightbox */}
+      {/* Lightbox (still available on click — for zooming into details) */}
       {lightboxImage && (
         <div
           className={styles.lightbox}
