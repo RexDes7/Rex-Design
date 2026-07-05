@@ -19,9 +19,15 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
 
-  // Lock body scroll + ESC handler
+  // Lock body + html scroll, prevent background scroll
   useEffect(() => {
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+    const originalBodyHeight = document.body.style.height;
+
     document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.height = '100%';
 
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -34,17 +40,18 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
     };
     window.addEventListener('keydown', handleEsc);
 
-    // Trigger entrance animation shortly after mount
     const timer = setTimeout(() => setIsReady(true), 50);
 
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = originalBodyOverflow;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+      document.body.style.height = originalBodyHeight;
       window.removeEventListener('keydown', handleEsc);
       clearTimeout(timer);
     };
   }, [onClose, lightboxImage]);
 
-  // Scroll listener — show/hide floating CTA based on footer visibility
+  // Track modal scroll to hide floating CTA when footer is visible
   useEffect(() => {
     const modal = modalRef.current;
     if (!modal || !footerRef.current) return;
@@ -53,14 +60,12 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
       if (!footerRef.current) return;
       const footerRect = footerRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
-      // Footer is considered "visible" when its top is above the bottom of viewport
-      // (with a small 80px threshold so button disappears a bit before footer is fully in view)
+      // Footer considered visible when its top is above viewport bottom - 80px
       const isFooterVisible = footerRect.top < viewportHeight - 80;
       setShowFloatingButton(!isFooterVisible);
     };
 
     modal.addEventListener('scroll', handleScroll, { passive: true });
-    // Initial check
     handleScroll();
 
     return () => {
@@ -95,32 +100,34 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
       aria-modal="true"
       aria-label={`Проект: ${project.title}`}
     >
+      {/* Close button — sibling of modal, fixed to viewport */}
+      <button
+        className={styles.closeButton}
+        onClick={onClose}
+        aria-label="Закрыть"
+      >
+        <span className="material-symbols-outlined">close</span>
+      </button>
+
+      {/* Floating CTA — sibling of modal, fixed to viewport */}
+      <Link
+        href="/contact"
+        className={`${styles.floatingCta} ${
+          showFloatingButton ? styles.floatingCtaVisible : styles.floatingCtaHidden
+        }`}
+      >
+        <span>Заказать проект</span>
+        <span className="material-symbols-outlined" aria-hidden="true">
+          arrow_forward
+        </span>
+      </Link>
+
+      {/* Modal — the only scroll container */}
       <div
         className={styles.modal}
         onClick={(e) => e.stopPropagation()}
         ref={modalRef}
       >
-        <button
-          className={styles.closeButton}
-          onClick={onClose}
-          aria-label="Закрыть"
-        >
-          <span className="material-symbols-outlined">close</span>
-        </button>
-
-        {/* Floating CTA — visible immediately, hides when footer comes into view */}
-        <Link
-          href="/contact"
-          className={`${styles.floatingCta} ${
-            showFloatingButton ? styles.floatingCtaVisible : styles.floatingCtaHidden
-          }`}
-        >
-          <span>Заказать проект</span>
-          <span className="material-symbols-outlined" aria-hidden="true">
-            arrow_forward
-          </span>
-        </Link>
-
         <div className={styles.content}>
           {/* Header */}
           <div className={styles.header}>
