@@ -101,9 +101,9 @@ export default function Home() {
                 <span className={styles.heroAccent}>работает на бизнес</span>
               </h1>
               <p className={styles.heroSubtitle}>
-                Привет, я Рафаэль — мультидисциплинарный дизайнер. Создаю бренды,
-                веб-интерфейсы и графику, которые решают задачи, а не просто
-                красиво выглядят.
+                Привет, я Рафаэль — мультидисциплинарный дизайнер. Помогаю брендам
+                выделяться через фирменный стиль, веб-интерфейсы и графику,
+                созданные под вашу задачу.
               </p>
               <div className={styles.heroCtas}>
                 <Link href="/contact" className="btn btn-primary">
@@ -148,10 +148,9 @@ export default function Home() {
             <div className={styles.introContent}>
               <FadeInWhenVisible variant="slideUp" delay={0.1}>
                 <h2 className={styles.introHeading}>
-                  Я не агентство.
+                  Я — дизайнер,
                   <br />
-                  Я — дизайнер, с которым
-                  <br />
+                  с которым
                   <span className={styles.accent}>говорят на одном языке</span>.
                 </h2>
               </FadeInWhenVisible>
@@ -159,8 +158,8 @@ export default function Home() {
                 <p className={styles.introText}>
                   Шесть лет в дизайне, 50+ завершённых проектов — от логотипа для
                   локальной кофейни до редизайна сайта логистической компании.
-                  Я работаю один, без менеджеров и junior-ов, поэтому вы общаетесь
-                  напрямую с человеком, который делает ваш проект.
+                  Вы общаетесь напрямую со мной на всех этапах: от брифа
+                  до финальных файлов.
                 </p>
               </FadeInWhenVisible>
               <FadeInWhenVisible variant="slideUp" delay={0.3}>
@@ -341,12 +340,13 @@ export default function Home() {
               <div className={styles.processAside}>
                 <div className={styles.processAsideCard}>
                   <h3 className={styles.processAsideTitle}>
-                    Не люблю сюрпризы
-                    <br />в работе
+                    Прозрачный
+                    <br />процесс работы
                   </h3>
                   <p className={styles.processAsideText}>
-                    Поэтому вы видите процесс на каждом этапе: от первого наброска
-                    до финальных файлов. Без чёрных ящиков и «доверьтесь, я художник».
+                    Вы видите процесс на каждом этапе: от первого наброска
+                    до финальных файлов. Полная ясность на каждом шаге —
+                    никаких скрытых решений.
                   </p>
                   <div className={styles.processAsideMeta}>
                     <span className="material-symbols-outlined" aria-hidden="true">
@@ -416,7 +416,8 @@ export default function Home() {
                 </h2>
                 <p className={styles.ctaText}>
                   Открыт к новым проектам с 2020 года. Расскажите о задаче —
-                  отвечу в течение 24 часов.
+                  отвечу в течение 24 часов с предварительной оценкой
+                  и планом работы.
                 </p>
                 {contacts.email && (
                   <a href={`mailto:${contacts.email}`} className={styles.ctaEmail}>

@@ -124,7 +124,7 @@ export default function CasesPage() {
             <p className={styles.heroSubtitle}>
               {projects.length} проектов за 6 лет — от логотипов и айдентики
               до веб-сайтов и инфографики для маркетплейсов. Выберите направление
-              или листайте всё.
+              или посмотрите все работы.
             </p>
           </FadeInWhenVisible>
         </div>

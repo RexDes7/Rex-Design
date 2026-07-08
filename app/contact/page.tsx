@@ -62,7 +62,8 @@ export default function ContactPage() {
               </h1>
               <p className={styles.heroSubtitle}>
                 Открыт к новым проектам с 2020 года. Расскажите о задаче —
-                отвечу в течение 24 часов с предварительной оценкой.
+                отвечу в течение 24 часов с предварительной оценкой
+                и планом работы.
               </p>
               <div className={styles.availability}>
                 <span className={styles.availabilityDot} aria-hidden="true" />
@@ -88,7 +89,8 @@ export default function ContactPage() {
               </h2>
               <p className={styles.formText}>
                 Чем подробнее вы опишете задачу, тем точнее я смогу оценить
-                сроки и стоимость. Все поля обязательны, кроме бюджета.
+                сроки и стоимость. Бюджет можно указать по желанию —
+                обсудим в переписке.
               </p>
               <ContactForm />
             </div>
