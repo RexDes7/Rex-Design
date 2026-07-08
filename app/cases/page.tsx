@@ -122,7 +122,7 @@ export default function CasesPage() {
           </FadeInWhenVisible>
           <FadeInWhenVisible variant="slideUp" delay={0.2}>
             <p className={styles.heroSubtitle}>
-              {projects.length} проектов за шесть лет: от айдентики для локальных
+              Множество проектов за шесть лет: от айдентики для локальных
               брендов до веб-сайтов и инфографики для маркетплейсов. Каждый
               сделан под конкретную задачу и доведён до результата. Выбирайте
               направление или посмотрите все работы целиком.
