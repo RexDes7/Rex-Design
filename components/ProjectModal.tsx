@@ -28,6 +28,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
     document.body.style.height = '100%';
+    document.body.setAttribute('data-modal-open', 'true');
 
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -46,6 +47,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
       document.body.style.overflow = originalBodyOverflow;
       document.documentElement.style.overflow = originalHtmlOverflow;
       document.body.style.height = originalBodyHeight;
+      document.body.removeAttribute('data-modal-open');
       window.removeEventListener('keydown', handleEsc);
       clearTimeout(timer);
     };

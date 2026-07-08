@@ -43,7 +43,12 @@ export default function ProjectCard({
   return (
     <article
       className={cardClasses}
-      onClick={onClick}
+      onClick={() => {
+        if (onClick) {
+          window.dispatchEvent(new CustomEvent('rex:activity'));
+          onClick();
+        }
+      }}
       style={{ '--card-index': index } as React.CSSProperties}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}

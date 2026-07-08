@@ -142,6 +142,7 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
         const data = await response.json()
 
         if (data.success) {
+          window.dispatchEvent(new CustomEvent('rex:activity'));
           setSubmitMessage({ type: 'success', text: 'Сообщение отправлено! Свяжусь с вами в ближайшее время.' })
 
           setFormData({
