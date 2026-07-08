@@ -92,7 +92,7 @@ export default function ProjectCard({
           </span>
         </div>
         <h3 className={styles.title}>{title}</h3>
-        {effectiveVariant !== 'compact' && (
+        {description && (
           <p className={styles.description}>{description}</p>
         )}
       </div>
