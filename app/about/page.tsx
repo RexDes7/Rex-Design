@@ -64,14 +64,14 @@ export default function AboutPage() {
                   <span className={styles.accent}>который создаёт осознанно</span>
                 </h1>
                 <p className={styles.heroLead}>
-                  Меня зовут Рафаэль. Я мультидисциплинарный дизайнер из Астрахани.
+                  Меня зовут Рафаэль. Я мультидисциплинарный дизайнер из Ульяновска.
                   Шесть лет создаю бренды, веб-интерфейсы и графику, которые
                   работают на бизнес: привлекают клиентов и усиливают сообщение.
                 </p>
                 <div className={styles.heroMeta}>
                   <div className={styles.metaItem}>
                     <span className={styles.metaLabel}>Локация</span>
-                    <span className={styles.metaValue}>Астрахань, Россия</span>
+                    <span className={styles.metaValue}>Ульяновск, Россия</span>
                   </div>
                   <div className={styles.metaItem}>
                     <span className={styles.metaLabel}>Опыт</span>
