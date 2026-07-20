@@ -49,7 +49,7 @@ export default function Navigation() {
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
   return (
-    <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
+      <header className={`${styles.header} ${scrolled ? styles.scrolled : ' '} ${mobileMenuOpen ? styles.menuOpen : ' '}`}>
       <nav className={styles.navigation} aria-label="Main navigation">
         <div className={styles.container}>
           <Link
