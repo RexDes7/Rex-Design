@@ -75,7 +75,7 @@ export default function AboutPage() {
                   </div>
                   <div className={styles.metaItem}>
                     <span className={styles.metaLabel}>Опыт</span>
-                    <span className={styles.metaValue}>6 лет, 50+ проектов</span>
+                    <span className={styles.metaValue}>6 лет, 150+ проектов</span>
                   </div>
                   <div className={styles.metaItem}>
                     <span className={styles.metaLabel}>Статус</span>

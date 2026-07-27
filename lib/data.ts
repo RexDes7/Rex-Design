@@ -259,9 +259,9 @@ export interface Stat {
 }
 
 export const stats: Stat[] = [
-  { value: '50+', label: 'Проектов', description: 'С 2020 года' },
+  { value: '150+', label: 'Проектов', description: 'С 2020 года' },
   { value: '6 лет', label: 'Опыта', description: 'В дизайне' },
-  { value: '20+', label: 'Клиентов', description: 'Повторно обращаются' },
+  { value: '100+', label: 'Клиентов', description: 'Повторно обращаются' },
   { value: '8', label: 'Направлений', description: 'Дизайна' },
 ]
 
@@ -338,6 +338,6 @@ export const experience: ExperienceItem[] = [
   {
     year: '2026',
     title: 'Сегодня',
-    description: '50+ проектов, постоянные клиенты, фокус на брендинге и вебе.',
+    description: '150+ проектов, более 100 клиентов, фокус на брендинге и вебе.',
   },
 ]
