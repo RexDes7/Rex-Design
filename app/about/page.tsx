@@ -18,6 +18,19 @@ import {
   experience,
 } from '@/lib/data';
 import styles from '@/styles/About.module.css';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Обо мне | Дизайнер Апарян Рафаэль',
+  description: 'Мультидисциплинарный дизайнер с 6-летним опытом. 150+ завершённых проектов в брендинге, веб-дизайне и типографике.',
+  keywords: ['дизайнер ульяновск', 'апарян рафаэль', 'веб дизайнер', 'брендинг', 'портфолио дизайнера'],
+  openGraph: {
+    title: 'Обо мне | Апарян Рафаэль — Дизайнер',
+    description: 'Мультидисциплинарный дизайнер с 6-летним опытом. 150+ завершённых проектов.',
+    url: 'https://rex-dsgn.vercel.app/about',
+    type: 'profile',
+  },
+};
 
 export default function AboutPage() {
   const [avatar, setAvatar] = useState('/images/portrait.svg');

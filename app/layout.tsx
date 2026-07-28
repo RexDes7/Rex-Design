@@ -3,7 +3,12 @@ import { Plus_Jakarta_Sans, Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import MainLayoutWrapper from '@/components/MainLayoutWrapper'
 import AnalyticsTracker from '@/components/AnalyticsTracker'
-import { generateOrganizationSchema, generateWebSiteSchema } from './schema'
+import { 
+  generateOrganizationSchema, 
+  generateWebSiteSchema,
+  generateLocalBusinessSchema,
+  generateProfessionalServiceSchema,
+} from './schema'
 
 // Disable caching for dynamic data
 export const fetchCache = 'force-no-store';
@@ -120,6 +125,8 @@ export default function RootLayout({
 }) {
   const organizationSchema = generateOrganizationSchema();
   const webSiteSchema = generateWebSiteSchema();
+  const localBusinessSchema = generateLocalBusinessSchema();
+  const professionalServiceSchema = generateProfessionalServiceSchema();
 
   return (
     <html lang="ru" className={`${plusJakarta.variable} ${inter.variable} ${jetbrains.variable}`}>
@@ -144,6 +151,14 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(professionalServiceSchema) }}
         />
       </head>
       <body>
