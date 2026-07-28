@@ -1,12 +1,15 @@
 import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
+  const baseUrl = 'https://rex-dsgn.vercel.app'
+  
   return {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/api/', '/private/'],
+      disallow: ['/api/', '/admin/', '/_next/'],
     },
-    sitemap: 'https://arhiv-24.com/sitemap.xml',
+    sitemap: `${baseUrl}/sitemap.xml`,
+    host: baseUrl,
   }
 }

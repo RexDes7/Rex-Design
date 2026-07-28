@@ -3,7 +3,7 @@ import { Plus_Jakarta_Sans, Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import MainLayoutWrapper from '@/components/MainLayoutWrapper'
 import AnalyticsTracker from '@/components/AnalyticsTracker'
-import { generateOrganizationSchema, generateWebSiteSchema } from './schema'
+import { generateOrganizationSchema, generateWebSiteSchema, generatePersonSchema } from './schema'
 
 // Disable caching for dynamic data
 export const fetchCache = 'force-no-store';
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     default: 'REX DESIGN - Дизайн студия | Брендинг, Веб-дизайн, Типографика',
     template: '%s | REX DESIGN',
   },
-  description: 'Профессиональная дизайн студия REX DESIGN. Создаём брендинг, веб-дизайн, типографику, UI/UX. Портфолио работ с 2020 года. Качественный дизайн для вашего бизнеса.',
+  description: 'Дизайнер Рафаэль Апарян (REX DESIGN, Ульяновск). Брендинг, веб-дизайн, типографика, UI/UX, инфографика, полиграфия. 150+ проектов с 2020 года. Открыт к новым проектам.',
   keywords: [
     'дизайн студия',
     'веб дизайн',
@@ -66,11 +66,11 @@ export const metadata: Metadata = {
     locale: 'ru_RU',
     url: 'https://rex-dsgn.vercel.app',
     siteName: 'REX DESIGN',
-    title: 'REX DESIGN - Дизайн студия | Брендинг, Веб-дизайн, Типографика',
-    description: 'Профессиональная дизайн студия. Создаём брендинг, веб-дизайн, типографику, UI/UX. Портфолио работ с 2020 года.',
+    title: 'REX DESIGN — дизайнер Рафаэль Апарян | Брендинг, Веб-дизайн',
+    description: '150+ проектов с 2020 года. Брендинг, веб-дизайн, типографика, UI/UX. Дизайнер из Ульяновска для вашего бизнеса.',
     images: [
       {
-        url: '/og-image.svg',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'REX DESIGN - Профессиональная дизайн студия',
@@ -81,7 +81,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'REX DESIGN - Дизайн студия',
     description: 'Профессиональная дизайн студия. Брендинг, веб-дизайн, типографика, UI/UX.',
-    images: ['/og-image.svg'],
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,
@@ -120,6 +120,7 @@ export default function RootLayout({
 }) {
   const organizationSchema = generateOrganizationSchema();
   const webSiteSchema = generateWebSiteSchema();
+  const personSchema = generatePersonSchema();
 
   return (
     <html lang="ru" className={`${plusJakarta.variable} ${inter.variable} ${jetbrains.variable}`}>
@@ -144,6 +145,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
         />
       </head>
       <body>
