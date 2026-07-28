@@ -5,6 +5,19 @@ import ContactForm from '@/components/ContactForm';
 import SectionLabel from '@/components/SectionLabel';
 import { FadeInWhenVisible } from '@/components/animations';
 import styles from '@/styles/Contact.module.css';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Контакты | Связаться с дизайнером',
+  description: 'Открыт к новым проектам с 2020 года. Свяжитесь для обсуждения задачи — отвечу в течение 24 часов.',
+  keywords: ['контакты дизайнера', 'заказать дизайн', 'связаться с дизайнером', 'дизайн на заказ'],
+  openGraph: {
+    title: 'Контакты | REX DESIGN',
+    description: 'Открыт к новым проектам. Напишите мне для обсуждения задачи.',
+    url: 'https://rex-dsgn.vercel.app/contact',
+    type: 'website',
+  },
+};
 
 interface ContactData {
   email: string;

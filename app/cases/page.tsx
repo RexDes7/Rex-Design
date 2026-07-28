@@ -8,8 +8,20 @@ import SectionLabel from '@/components/SectionLabel';
 import { FadeInWhenVisible } from '@/components/animations';
 import { animationConfig } from '@/lib/animations/config';
 import styles from './page.module.css';
-
 import { Project } from '@/types/project';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Портфолио | Кейсы и проекты REX DESIGN',
+  description: 'Портфолио работ студии дизайна REX DESIGN. Более 150 завершённых проектов в брендинге, веб-дизайне, типографике и UI/UX.',
+  keywords: ['портфолио дизайнера', 'кейсы дизайн', 'веб дизайн портфолио', 'брендинг работы', 'логотипы', 'фирменный стиль'],
+  openGraph: {
+    title: 'Портфолио работ | REX DESIGN',
+    description: 'Более 150 завершённых проектов в брендинге, веб-дизайне, типографике и UI/UX.',
+    url: 'https://rex-dsgn.vercel.app/cases',
+    type: 'website',
+  },
+};
 
 type Category = 'Все проекты' | 'Веб-Дизайн' | 'Брендинг' | 'Типографика' | 'UI/UX' | 'Инфографика' | 'Полиграфия' | 'Иллюстрация' | 'Анимация';
 
