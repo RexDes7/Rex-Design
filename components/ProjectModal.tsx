@@ -7,7 +7,7 @@ import { Project } from '@/types/project';
 import styles from '@/styles/ProjectModal.module.css';
 
 interface ProjectModalProps {
-  project: Project & { images?: string };
+  project: Project;
   onClose: () => void;
 }
 

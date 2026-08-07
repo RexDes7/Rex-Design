@@ -7,6 +7,7 @@ export interface Project {
   year: string
   image: string
   imageAlt: string
+  images?: string[] // Gallery images for modal
   wide?: boolean
   featured?: boolean // Yellow background
   variant?: 'standard' | 'featured' | 'dark'

@@ -46,14 +46,21 @@ interface ApiProject {
 }
 
 function normalizeProject(p: ApiProject): Project & { createdAt?: string; displayOrder?: number; featuredRaw?: number } {
-  let images = p.images;
-  if (typeof images === 'string') {
-    try { images = JSON.parse(images) } catch { images = [] }
+  let images: string[] = [];
+  if (typeof p.images === 'string') {
+    try {
+      const parsed = JSON.parse(p.images);
+      images = Array.isArray(parsed) ? parsed : [];
+    } catch { images = [] }
+  } else if (Array.isArray(p.images)) {
+    images = p.images;
   }
-  let categories = p.categories;
-  if (typeof categories === 'string') {
-    try { categories = JSON.parse(categories) } catch { categories = [p.category] }
-  } else if (!categories) {
+  let categories: string[] | undefined;
+  if (typeof p.categories === 'string') {
+    try { categories = JSON.parse(p.categories) } catch { categories = [p.category] }
+  } else if (Array.isArray(p.categories)) {
+    categories = p.categories;
+  } else {
     categories = [p.category];
   }
   return {
