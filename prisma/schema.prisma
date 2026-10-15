@@ -1,0 +1,85 @@
+// REX DESIGN — Prisma schema (redesign)
+// Ported from MongoDB structure: projects, users, content, pageviews
+// plus SQLite-side features: clicks, form_submissions, logs
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Project {
+  id           String   @id @default(cuid())
+  title        String
+  description  String
+  category     String
+  categories   String   @default("[]") // JSON array string — API parity with original
+  year         String
+  image        String
+  imageAlt     String
+  images       String   @default("[]") // JSON array string — gallery
+  wide         Int      @default(0)
+  featured     Int      @default(0)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([displayOrder])
+}
+
+model Content {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model Pageview {
+  id        Int      @id @default(autoincrement())
+  path      String
+  ip        String?
+  timestamp DateTime @default(now())
+
+  @@index([timestamp])
+  @@index([path])
+}
+
+model Click {
+  id          Int      @id @default(autoincrement())
+  elementId   String
+  elementType String?
+  path        String?
+  createdAt   DateTime @default(now())
+}
+
+model FormSubmission {
+  id        Int      @id @default(autoincrement())
+  formId    String?
+  name      String
+  email     String
+  message   String
+  read      Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Log {
+  id        Int      @id @default(autoincrement())
+  type      String   @default("admin_action") // admin_action | system_error | security_event
+  message   String
+  details   String?
+  severity  String   @default("info") // info | warning | error | critical
+  createdAt DateTime @default(now())
+
+  @@index([type])
+  @@index([severity])
+}

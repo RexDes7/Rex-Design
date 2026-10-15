@@ -1,0 +1,469 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono-jb);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  /* REX palette */
+  --color-paper: var(--paper);
+  --color-paper-dark: var(--paper-dark);
+  --color-ink: var(--ink);
+  --color-rex-red: var(--rex-red);
+  --color-rex-gray: var(--rex-gray);
+  --color-line: var(--line);
+}
+
+:root {
+  --radius: 0rem; /* острые углы — постмодерн */
+
+  /* ===== REX POST-MODERN PALETTE ===== */
+  --paper: #e8e4df; /* тёплая бумага */
+  --paper-dark: #ddd8d1; /* бумага темнее */
+  --ink: #0a0a0a; /* чернила */
+  --rex-red: #e63946; /* акцентный красный */
+  --rex-red-dark: #c42b37;
+  --rex-gray: #6b7280; /* вторичный серый */
+  --line: rgba(10, 10, 10, 0.16); /* линии */
+
+  /* ===== shadcn mapping ===== */
+  --background: #e8e4df;
+  --foreground: #0a0a0a;
+  --card: #ffffff;
+  --card-foreground: #0a0a0a;
+  --popover: #ffffff;
+  --popover-foreground: #0a0a0a;
+  --primary: #0a0a0a;
+  --primary-foreground: #e8e4df;
+  --secondary: #ddd8d1;
+  --secondary-foreground: #0a0a0a;
+  --muted: #ddd8d1;
+  --muted-foreground: #6b7280;
+  --accent: #f2dbdd;
+  --accent-foreground: #0a0a0a;
+  --destructive: #c42b37;
+  --border: rgba(10, 10, 10, 0.16);
+  --input: rgba(10, 10, 10, 0.24);
+  --ring: #e63946;
+  --chart-1: #e63946;
+  --chart-2: #0a0a0a;
+  --chart-3: #6b7280;
+  --chart-4: #b8b4ae;
+  --chart-5: #8a8f98;
+  --sidebar: #0a0a0a;
+  --sidebar-foreground: #e8e4df;
+  --sidebar-primary: #e63946;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #16181d;
+  --sidebar-accent-foreground: #e8e4df;
+  --sidebar-border: rgba(232, 228, 223, 0.14);
+  --sidebar-ring: #e63946;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body), system-ui, sans-serif;
+    background-color: var(--paper);
+  }
+  ::selection {
+    background: var(--rex-red);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--rex-red);
+    outline-offset: 2px;
+  }
+  /* кастомный скроллбар */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--paper-dark);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--ink);
+    border: 2px solid var(--paper-dark);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--rex-red);
+  }
+}
+
+/* ============================================================
+   REX POST-MODERN — кастомные утилиты
+   ============================================================ */
+
+/* Зерно бумаги поверх всего */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.55;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+/* Контейнер */
+.container-rex {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 640px) {
+  .container-rex {
+    padding-inline: 2rem;
+  }
+}
+@media (min-width: 1280px) {
+  .container-rex {
+    padding-inline: 3.5rem;
+  }
+}
+
+/* Жёсткая тень */
+.hard-shadow {
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.hard-shadow-sm {
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.hard-shadow-red {
+  box-shadow: 5px 5px 0 var(--rex-red);
+}
+.hard-shadow-none {
+  box-shadow: 0 0 0 var(--ink);
+}
+
+/* Типографика */
+.font-display {
+  font-family: var(--font-display), Impact, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+.font-hand {
+  font-family: var(--font-hand), cursive;
+}
+.mono-label {
+  font-family: var(--font-mono-jb), monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.text-outline {
+  -webkit-text-stroke: 1.5px var(--ink);
+  color: transparent;
+}
+.text-outline-paper {
+  -webkit-text-stroke: 1.5px var(--paper);
+  color: transparent;
+}
+
+/* Кнопки */
+.btn-rex {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-mono-jb), monospace;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.875rem 1.5rem;
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 rgba(10, 10, 10, 0.35);
+  transition:
+    transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.18s,
+    color 0.18s;
+  cursor: pointer;
+}
+.btn-rex:hover:not(:disabled) {
+  background: var(--rex-red);
+  border-color: var(--rex-red);
+  color: #fff;
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+.btn-rex:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--ink);
+}
+.btn-rex:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-rex-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-mono-jb), monospace;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.875rem 1.5rem;
+  border: 2px solid var(--ink);
+  transition:
+    transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.18s,
+    color 0.18s,
+    box-shadow 0.18s;
+  cursor: pointer;
+}
+.btn-rex-ghost:hover {
+  background: var(--ink);
+  color: var(--paper);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--rex-red);
+}
+
+/* Ссылка со стрелкой */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono-jb), monospace;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 0.25rem;
+  transition:
+    color 0.18s,
+    border-color 0.18s,
+    gap 0.18s;
+  cursor: pointer;
+}
+.link-arrow:hover {
+  color: var(--rex-red);
+  border-color: var(--rex-red);
+  gap: 0.875rem;
+}
+
+/* Карточки */
+.card-rex {
+  background: #fff;
+  border: 2px solid var(--ink);
+  transition:
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-rex:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0 var(--rex-red);
+}
+.card-rex-flat {
+  background: #fff;
+  border: 2px solid var(--ink);
+}
+
+/* Инпуты */
+.input-rex {
+  width: 100%;
+  background: #fff;
+  border: 2px solid var(--ink);
+  padding: 0.875rem 1rem;
+  font-size: 0.9375rem;
+  color: var(--ink);
+  transition:
+    box-shadow 0.18s,
+    border-color 0.18s;
+}
+.input-rex::placeholder {
+  color: #9ca3af;
+}
+.input-rex:focus {
+  outline: none;
+  border-color: var(--rex-red);
+  box-shadow: 4px 4px 0 rgba(230, 57, 70, 0.35);
+}
+.input-rex-error {
+  border-color: var(--rex-red);
+}
+
+/* Marquee-лента */
+@keyframes rex-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: rex-marquee var(--marquee-speed, 28s) linear infinite;
+}
+.marquee-paused:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Пульс точки статуса */
+@keyframes rex-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 9px rgba(230, 57, 70, 0);
+  }
+}
+.pulse-dot {
+  animation: rex-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Парение декора */
+@keyframes rex-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(6deg);
+  }
+}
+.float-slow {
+  animation: rex-float 7s ease-in-out infinite;
+}
+.float-slower {
+  animation: rex-float 11s ease-in-out infinite;
+}
+
+/* Вращение звезды */
+@keyframes rex-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin-slow {
+  animation: rex-spin 14s linear infinite;
+}
+
+/* Появление при скролле (без JS) */
+@keyframes rex-rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.rise-in {
+  animation: rex-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Рваный край (низ) */
+.torn-bottom {
+  --s: 14px;
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg)
+    50%/var(--s) 100%;
+}
+
+/* Мигающий курсор-блок */
+@keyframes rex-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.blink {
+  animation: rex-blink 1.1s steps(1) infinite;
+}
+
+/* Скролл-секция с сеткой-разметкой */
+.grid-paper {
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* Уважение к reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .pulse-dot,
+  .float-slow,
+  .float-slower,
+  .spin-slow,
+  .blink {
+    animation: none !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Тёмный режим выделения в админке */
+.admin-root ::selection {
+  background: var(--rex-red);
+  color: #fff;
+}
+.admin-root ::-webkit-scrollbar-track {
+  background: #101216;
+}
+.admin-root ::-webkit-scrollbar-thumb {
+  background: #2a2e36;
+  border-color: #101216;
+}
