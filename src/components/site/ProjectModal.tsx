@@ -3,17 +3,20 @@
  * Клик по кейсу открывает колоду: титульная карточка + все изображения галереи.
  * Перелистывание: свайп/перетаскивание верхней карточки, стрелки клавиатуры,
  * кнопки ◀ ▶ и сегменты прогресса. Зацикленный порядок, глубина стека — 3 карточки.
- * Клик по фото (или по обложке титульной) открывает изображение на весь экран
- * (Lightbox: ← → / свайп / кнопки, ESC закрывает только просмотр). ESC закрывает
- * модал, скролл тела блокируется (data-modal-open для PromoPopup).
+ * Клик по фото (или по обложке титульной) открывает изображение на весь экран:
+ * обычные — вписаны в экран (как раньше), «высокие» лендинги — во всю ширину,
+ * с прокруткой вниз. ESC закрывает только просмотр, второй ESC — модал,
+ * скролл тела блокируется (data-modal-open для PromoPopup).
  */
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import { ArrowRight, ChevronLeft, ChevronRight, Layers, Maximize2, X } from 'lucide-react'
+import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Layers, Loader2, Maximize2, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { cldSrc, getCachedDims, isTallDims, probeImageDims, LIGHTBOX_W } from '@/lib/cld'
+import type { ImageDims } from '@/lib/cld'
 import type { Project, Route } from '@/lib/types'
 import { navigateTo } from '@/lib/use-hash-route'
 
@@ -38,6 +41,12 @@ export default function ProjectModal({
     () => (project.images.length > 0 ? project.images : project.image ? [project.image] : []),
     [project]
   )
+
+  // Размеры изображений галереи — узнаём заранее (Cloudinary fl_getinfo,
+  // считанные байты): клик по фото открывает просмотр мгновенно, без спиннера
+  useEffect(() => {
+    for (const src of gallery) void probeImageDims(src)
+  }, [gallery])
 
   // Колода: титульная карточка + карточки галереи
   const cards = useMemo<Card[]>(() => {
@@ -364,7 +373,10 @@ function isClickOnPhoto(e: React.MouseEvent, img: HTMLImageElement | null): bool
   return e.clientX >= x0 && e.clientX <= x0 + w && e.clientY >= y0 && e.clientY <= y0 + h
 }
 
-/** Полноэкранный просмотр изображения: ← → / свайп / кнопки, клик по фону — закрыть */
+/** Полноэкранный просмотр изображения:
+ *  • обычные фото — вписаны в экран (contain), клик по фону закрывает;
+ *  • «высокие» (лендинги, h/w ≥ 1.45) — во всю ширину, прокрутка вниз,
+ *    клик по фото не закрывает, ← → по-прежнему листают галерею. */
 function Lightbox({
   images,
   index,
@@ -382,6 +394,54 @@ function Lightbox({
   onClose: () => void
   onPaginate: (delta: number) => void
 }) {
+  const url = images[index]
+
+  // Размеры узнаём заранее: от них зависит режим просмотра.
+  // При смене изображения — синхронный сброс из кэша, догрузка — из пробы.
+  const [dims, setDims] = useState<ImageDims | null>(() => getCachedDims(url))
+  const [prevUrl, setPrevUrl] = useState(url)
+  if (prevUrl !== url) {
+    setPrevUrl(url)
+    setDims(getCachedDims(url))
+  }
+
+  useEffect(() => {
+    // уже известно из кэша (могли прогреть при открытии кейса)
+    if (getCachedDims(url)) return
+    let cancelled = false
+    void probeImageDims(url).then((d) => {
+      if (!cancelled && d) setDims(d)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [url])
+
+  const tall = dims !== null && isTallDims(dims)
+
+  // Подсказка «прокрутите вниз»: показываем, пока не начали скроллить
+  const [showScrollHint, setShowScrollHint] = useState(true)
+  const [tallLoaded, setTallLoaded] = useState(false)
+  const [prevIndex, setPrevIndex] = useState(index)
+  if (prevIndex !== index) {
+    setPrevIndex(index)
+    setShowScrollHint(true)
+    setTallLoaded(false)
+  }
+
+  const swipePaginate = (
+    _e: unknown,
+    info: { offset: { x: number }; velocity: { x: number } }
+  ) => {
+    if (info.offset.x < -SWIPE_THRESHOLD || info.velocity.x < -VELOCITY_THRESHOLD) {
+      onPaginate(1)
+    } else if (info.offset.x > SWIPE_THRESHOLD || info.velocity.x > VELOCITY_THRESHOLD) {
+      onPaginate(-1)
+    }
+  }
+
+  const displayW = dims ? Math.min(dims.w, LIGHTBOX_W) : 0
+
   return (
     <motion.div
       className="fixed inset-0 z-[300] flex flex-col bg-[#0A0A0A]"
@@ -415,45 +475,100 @@ function Lightbox({
       </div>
 
       {/* Изображение */}
-      <div
-        className="relative flex flex-1 items-center justify-center overflow-hidden p-3 sm:p-6"
-        onClick={onClose}
-      >
-        <AnimatePresence initial={false} custom={direction} mode="popLayout">
+      <div className="relative flex flex-1 overflow-hidden p-3 sm:p-6" onClick={onClose}>
+        {dims === null ? (
+          /* Узнаём размеры — показываем загрузку */
+          <div className="flex flex-1 flex-col items-center justify-center gap-3">
+            <Loader2 className="h-8 w-8 animate-spin text-rex-red" aria-hidden="true" />
+            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">
+              Загружаю изображение…
+            </span>
+          </div>
+        ) : tall ? (
+          /* ВЫСОКОЕ изображение: во всю ширину, скроллится вниз */
           <motion.div
             key={index}
-            className="relative h-full w-full select-none"
-            initial={{ opacity: 0, x: direction * 90 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: direction * -90 }}
-            transition={{ duration: 0.22, ease: 'easeOut' }}
+            className="lightbox-scroll relative flex-1 overflow-y-auto overscroll-contain"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
             drag={images.length > 1 ? 'x' : false}
             dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.6}
-            onDragEnd={(_e, info) => {
-              if (info.offset.x < -SWIPE_THRESHOLD || info.velocity.x < -VELOCITY_THRESHOLD) {
-                onPaginate(1)
-              } else if (info.offset.x > SWIPE_THRESHOLD || info.velocity.x > VELOCITY_THRESHOLD) {
-                onPaginate(-1)
-              }
-            }}
-            onClick={(e) => {
-              e.stopPropagation()
-              const img = e.currentTarget.querySelector('img')
-              if (!isClickOnPhoto(e, img)) onClose()
+            dragElastic={0.5}
+            onDragEnd={swipePaginate}
+            onScroll={(e) => {
+              if (e.currentTarget.scrollTop > 48) setShowScrollHint(false)
             }}
           >
+            {/* Статус загрузки (высокие изображения могут грузиться дольше) */}
+            {!tallLoaded && (
+              <div
+                className="pointer-events-none sticky top-0 z-10 flex h-0 items-start justify-center"
+                aria-hidden="true"
+              >
+                <span className="mt-[32vh] flex items-center gap-3 border-2 border-white/25 bg-ink/85 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-white/85">
+                  <Loader2 className="h-4 w-4 animate-spin text-rex-red" />
+                  Загружаю изображение…
+                </span>
+              </div>
+            )}
             <Image
-              src={images[index]}
+              src={cldSrc(url, LIGHTBOX_W)}
               alt={`${alt} — изображение ${index + 1} из ${images.length}`}
-              fill
+              width={displayW}
+              height={Math.round((dims.h * displayW) / dims.w)}
               sizes="100vw"
-              className="object-contain"
+              style={{ maxWidth: displayW }}
+              className="mx-auto block h-auto w-full select-none"
               priority
               draggable={false}
+              onLoad={() => setTallLoaded(true)}
+              onError={() => setTallLoaded(true)}
+              /* клик по самому фото не закрывает просмотр */
+              onClick={(e) => e.stopPropagation()}
             />
           </motion.div>
-        </AnimatePresence>
+        ) : (
+          /* ОБЫЧНОЕ изображение — вписано в экран, как раньше */
+          <AnimatePresence initial={false} custom={direction} mode="popLayout">
+            <motion.div
+              key={index}
+              className="relative h-full w-full select-none"
+              initial={{ opacity: 0, x: direction * 90 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: direction * -90 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
+              drag={images.length > 1 ? 'x' : false}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.6}
+              onDragEnd={swipePaginate}
+              onClick={(e) => {
+                e.stopPropagation()
+                const img = e.currentTarget.querySelector('img')
+                if (!isClickOnPhoto(e, img)) onClose()
+              }}
+            >
+              <Image
+                src={cldSrc(url, LIGHTBOX_W)}
+                alt={`${alt} — изображение ${index + 1} из ${images.length}`}
+                fill
+                sizes="100vw"
+                className="object-contain"
+                priority
+                draggable={false}
+              />
+            </motion.div>
+          </AnimatePresence>
+        )}
+
+        {/* Подсказка про прокрутку (для высоких изображений) */}
+        {tall && showScrollHint && (
+          <span className="pointer-events-none absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 border-2 border-white/25 bg-ink/85 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-white/85">
+            длинное изображение — прокрутите вниз
+            <ChevronDown className="h-3.5 w-3.5 animate-bounce" aria-hidden="true" />
+          </span>
+        )}
 
         {/* Стрелки */}
         {images.length > 1 && (
@@ -485,7 +600,9 @@ function Lightbox({
       {/* Подпись */}
       <div className="relative z-10 shrink-0 border-t-2 border-white/10 px-4 py-2.5 text-center sm:px-6">
         <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/45">
-          ESC — закрыть · ← → или свайп — листать
+          {tall
+            ? 'ESC — закрыть · ← → — листать · колесо — прокрутка'
+            : 'ESC — закрыть · ← → или свайп — листать'}
         </span>
       </div>
     </motion.div>
@@ -529,7 +646,7 @@ function CardFace({
               className="group/zoom absolute inset-0 block cursor-zoom-in"
             >
               <Image
-                src={p.image}
+                src={cldSrc(p.image, 800)}
                 alt={p.imageAlt || p.title}
                 fill
                 sizes="(max-width: 640px) 92vw, 560px"
@@ -541,7 +658,7 @@ function CardFace({
             </button>
           ) : (
             <Image
-              src={p.image}
+              src={cldSrc(p.image, 800)}
               alt={p.imageAlt || p.title}
               fill
               sizes="(max-width: 640px) 92vw, 560px"
@@ -595,7 +712,7 @@ function CardFace({
         >
           <span className="relative block h-full w-full">
             <Image
-              src={card.src}
+              src={cldSrc(card.src, 800)}
               alt={`${card.alt} — изображение ${card.number}`}
               fill
               sizes="(max-width: 640px) 92vw, 560px"
@@ -609,7 +726,7 @@ function CardFace({
         <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-5">
           <div className="relative h-full w-full">
             <Image
-              src={card.src}
+              src={cldSrc(card.src, 800)}
               alt={`${card.alt} — изображение ${card.number}`}
               fill
               sizes="(max-width: 640px) 92vw, 560px"

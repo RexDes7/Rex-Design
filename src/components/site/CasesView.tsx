@@ -12,6 +12,7 @@ import { ArrowDownWideNarrow, ArrowRight, FolderX, Loader2 } from 'lucide-react'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import { fetchProjects } from '@/lib/api'
+import { cldSrc } from '@/lib/cld'
 import { portfolioCategories } from '@/lib/data'
 import type { Project, SortMode } from '@/lib/types'
 import SectionLabel from './SectionLabel'
@@ -76,18 +77,18 @@ function MarqueeCard({
       onKeyDown={handleKey}
       aria-label={`Открыть проект: ${project.title}`}
       className={cn(
-        'group relative flex w-64 shrink-0 cursor-pointer select-none flex-col overflow-hidden border-2 border-ink bg-ink text-paper transition-all duration-300 sm:w-72 lg:w-80',
+        'group relative flex w-64 shrink-0 cursor-pointer select-none flex-col overflow-hidden border-2 border-ink bg-ink text-paper transition-[transform,box-shadow] duration-300 sm:w-72 lg:w-80',
         'focus-visible:-translate-y-1 focus-visible:shadow-[6px_6px_0_#E63946] hover:-translate-y-1 hover:shadow-[6px_6px_0_#E63946]'
       )}
     >
       {/* Изображение */}
       <div className="relative aspect-[4/3] w-full overflow-hidden border-b-2 border-ink bg-[#141414]">
         <Image
-          src={project.image}
+          src={cldSrc(project.image, 640)}
           alt={project.imageAlt || project.title}
           fill
           sizes="(max-width: 640px) 90vw, 320px"
-          className="object-cover transition-all duration-500 group-hover:scale-[1.05] group-hover:opacity-90"
+          className="object-cover transition-[transform,opacity] duration-500 group-hover:scale-[1.05] group-hover:opacity-90"
         />
         <span className="absolute left-2.5 top-2.5 font-mono text-[10px] tracking-widest text-white/60">
           {String(index + 1).padStart(2, '0')}
@@ -148,6 +149,8 @@ function CategoryRow({
   // Число копий контента: хватает, чтобы лента не «кончалась» на широких экранах
   const [copies, setCopies] = useState(2)
   const [reducedMotion, setReducedMotion] = useState(false)
+  // Лента вне экрана — кадровый цикл не нужен (IntersectionObserver)
+  const [visible, setVisible] = useState(true)
 
   // Состояние прокрутки — в ref'ах: 60 fps без ререндеров React
   const offset = useRef(0) // сдвиг ленты влево, px; всегда в [0, half)
@@ -177,16 +180,32 @@ function CategoryRow({
     return () => mq.removeEventListener('change', update)
   }, [])
 
+  // Оптимизация: вне вьюпорта лента замерзает (с запасом 160px на плавный въезд)
+  useEffect(() => {
+    const el = viewportRef.current
+    if (!el || typeof IntersectionObserver === 'undefined') return
+    const io = new IntersectionObserver(
+      (entries) => setVisible(entries[entries.length - 1].isIntersecting),
+      { rootMargin: '160px 0px' }
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
   /** Сшивка бесконечной ленты: держим offset в [0, half) — копии одинаковые, стык невиден */
   const wrapOffset = (x: number) => {
     const h = half.current
     return ((x % h) + h) % h
   }
 
+  // Запись transform только при изменении смещения — на паузе нет лишних стилей
+  const lastWritten = useRef(NaN)
   const applyTransform = () => {
-    if (trackRef.current) {
-      trackRef.current.style.transform = `translate3d(${-offset.current}px, 0, 0)`
-    }
+    const el = trackRef.current
+    if (!el) return
+    if (offset.current === lastWritten.current) return
+    lastWritten.current = offset.current
+    el.style.transform = `translate3d(${-offset.current}px, 0, 0)`
   }
 
   // Замер одной копии + пересчёт числа копий под ширину экрана
@@ -198,6 +217,7 @@ function CategoryRow({
       const need = Math.max(2, Math.ceil(1 + viewportRef.current.clientWidth / half.current))
       setCopies(need)
       offset.current = wrapOffset(offset.current)
+      lastWritten.current = NaN // после resize — принудительная запись
       applyTransform()
     }
     measure()
@@ -207,8 +227,10 @@ function CategoryRow({
   }, [])
 
   // Кадровый цикл: во время drag смещение задаёт указатель; после броска —
-  // инерция с затуханием; затем — спокойная автопрокрутка (пауза при hover)
+  // инерция с затуханием; затем — спокойная автопрокрутка (пауза при hover).
+  // Крутится только пока ряд на экране — вне вьюпорта rAF не существует.
   useEffect(() => {
+    if (!visible) return
     let raf = 0
     let last = performance.now()
     const tick = (now: number) => {
@@ -232,7 +254,7 @@ function CategoryRow({
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [duration, reverse])
+  }, [duration, reverse, visible])
 
   /** Зажать ЛКМ / палец и тянуть — лента следует за указателем */
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -419,8 +441,9 @@ export default function CasesView({ onOpenProject }: { onOpenProject: (p: Projec
         </p>
       </section>
 
-      {/* Липкая панель фильтров */}
-      <div className="sticky top-16 z-40 border-y-2 border-ink bg-paper/95 backdrop-blur-sm sm:top-[72px]">
+      {/* Липкая панель фильтров (непрозрачная: backdrop-blur над движущимися
+          лентами заставлял GPU пересчитывать размытие каждый кадр) */}
+      <div className="sticky top-16 z-40 border-y-2 border-ink bg-paper sm:top-[72px]">
         <div className="container-rex flex flex-col gap-3 py-3 lg:flex-row lg:items-center lg:justify-between">
           {/* Категории */}
           <div className="scrollbar-none -mx-1 flex gap-2 overflow-x-auto px-1 py-1" role="tablist" aria-label="Фильтр по категориям">

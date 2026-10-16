@@ -7,6 +7,7 @@
 import { ArrowUpRight } from 'lucide-react'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
+import { cldSrc } from '@/lib/cld'
 import type { Project } from '@/lib/types'
 
 export type CardVariant = 'standard' | 'wide' | 'compact' | 'hero'
@@ -44,7 +45,7 @@ export default function ProjectCard({
       onKeyDown={handleKey}
       aria-label={`Открыть проект: ${project.title}`}
       className={cn(
-        'group relative flex cursor-pointer flex-col overflow-hidden border-2 border-ink bg-ink text-paper transition-all duration-300',
+        'group relative flex cursor-pointer flex-col overflow-hidden border-2 border-ink bg-ink text-paper transition-[transform,box-shadow] duration-300',
         'hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[8px_8px_0_#E63946]',
         'focus-visible:-translate-x-1 focus-visible:-translate-y-1 focus-visible:shadow-[8px_8px_0_#E63946]',
         effectiveVariant === 'wide' && 'sm:col-span-2',
@@ -59,11 +60,11 @@ export default function ProjectCard({
         )}
       >
         <Image
-          src={project.image}
+          src={cldSrc(project.image, 1000)}
           alt={project.imageAlt || project.title}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
-          className="object-cover transition-all duration-500 group-hover:scale-[1.04] group-hover:opacity-90"
+          className="object-cover transition-[transform,opacity] duration-500 group-hover:scale-[1.04] group-hover:opacity-90"
         />
         {/* Индекс */}
         <span className="absolute left-3 top-3 font-mono text-[11px] tracking-widest text-white/60">
@@ -71,7 +72,7 @@ export default function ProjectCard({
         </span>
         {/* Стрелка */}
         <span
-          className="absolute bottom-3 right-3 grid h-10 w-10 place-items-center border-2 border-paper/0 bg-paper text-ink transition-all duration-300 group-hover:border-rex-red group-hover:bg-rex-red group-hover:text-white"
+          className="absolute bottom-3 right-3 grid h-10 w-10 place-items-center border-2 border-paper/0 bg-paper text-ink transition-colors duration-300 group-hover:border-rex-red group-hover:bg-rex-red group-hover:text-white"
           aria-hidden="true"
         >
           <ArrowUpRight className="h-5 w-5 transition-transform duration-300 group-hover:rotate-45" />
