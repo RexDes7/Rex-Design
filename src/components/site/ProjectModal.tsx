@@ -3,14 +3,16 @@
  * Клик по кейсу открывает колоду: титульная карточка + все изображения галереи.
  * Перелистывание: свайп/перетаскивание верхней карточки, стрелки клавиатуры,
  * кнопки ◀ ▶ и сегменты прогресса. Зацикленный порядок, глубина стека — 3 карточки.
- * ESC закрывает, скролл тела блокируется (data-modal-open для PromoPopup).
+ * Клик по фото (или по обложке титульной) открывает изображение на весь экран
+ * (Lightbox: ← → / свайп / кнопки, ESC закрывает только просмотр). ESC закрывает
+ * модал, скролл тела блокируется (data-modal-open для PromoPopup).
  */
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import { ArrowRight, ChevronLeft, ChevronRight, Layers, X } from 'lucide-react'
+import { ArrowRight, ChevronLeft, ChevronRight, Layers, Maximize2, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { Project, Route } from '@/lib/types'
 import { navigateTo } from '@/lib/use-hash-route'
@@ -61,6 +63,32 @@ export default function ProjectModal({
     [cards.length]
   )
 
+  // Полноэкранный просмотр фото: индекс в gallery | null
+  const [fullscreen, setFullscreen] = useState<number | null>(null)
+  const [fsDirection, setFsDirection] = useState(1)
+
+  const fsPaginate = useCallback(
+    (delta: number) => {
+      if (gallery.length < 2) return
+      setFsDirection(delta)
+      setFullscreen((i) => (i === null ? null : (i + delta + gallery.length) % gallery.length))
+    },
+    [gallery.length]
+  )
+
+  // Клик по фото был или перетаскивание карточки — глушим зум после drag
+  const cardDraggedRef = useRef(false)
+  const cardDragReset = useRef<number | null>(null)
+
+  const openFullscreen = useCallback(
+    (galleryIndex: number) => {
+      if (cardDraggedRef.current || gallery.length === 0) return
+      setFsDirection(1)
+      setFullscreen(Math.min(galleryIndex, gallery.length - 1))
+    },
+    [gallery.length]
+  )
+
   // Блокировка скролла + атрибут для PromoPopup
   useEffect(() => {
     const prevOverflow = document.body.style.overflow
@@ -72,16 +100,23 @@ export default function ProjectModal({
     }
   }, [])
 
-  // Клавиатура: ← → листают, ESC закрывает
+  // Клавиатура: если открыт фуллскрин — ← → листают фото, ESC закрывает только
+  // фуллскрин; иначе ← → листают колоду, ESC закрывает модал
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (fullscreen !== null) {
+        if (e.key === 'Escape') setFullscreen(null)
+        else if (e.key === 'ArrowRight') fsPaginate(1)
+        else if (e.key === 'ArrowLeft') fsPaginate(-1)
+        return
+      }
       if (e.key === 'Escape') onClose()
       if (e.key === 'ArrowRight') paginate(1)
       if (e.key === 'ArrowLeft') paginate(-1)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [onClose, paginate])
+  }, [onClose, paginate, fsPaginate, fullscreen])
 
   // Драг верхней карточки: framer сам управляет x (drag), а MotionValue
   // через пружину — только для живого наклона во время перетаскивания.
@@ -105,6 +140,12 @@ export default function ProjectModal({
     } else if (offset > SWIPE_THRESHOLD || velocity > VELOCITY_THRESHOLD) {
       paginate(-1)
     }
+    // Готовим сброс «это был drag»: клик после броска (до 350 мс) не откроет зум,
+    // а следующее нажатие/Enter по кнопке — откроет
+    if (cardDragReset.current) window.clearTimeout(cardDragReset.current)
+    cardDragReset.current = window.setTimeout(() => {
+      cardDraggedRef.current = false
+    }, 350)
   }
 
   const goContact: Route = '/contact'
@@ -119,6 +160,8 @@ export default function ProjectModal({
     d,
     card: cards[(index + d) % cards.length],
   }))
+
+  const topCard = cards[index]
 
   return (
     <div
@@ -188,13 +231,19 @@ export default function ProjectModal({
           <AnimatePresence initial={false} custom={direction}>
             <motion.div
               key={index}
-              className="absolute inset-0 cursor-grab touch-pan-y border-2 border-ink bg-ink shadow-[10px_10px_0_#E63946] active:cursor-grabbing"
+              className="absolute inset-0 cursor-grab touch-pan-y select-none border-2 border-ink bg-ink shadow-[10px_10px_0_#E63946] active:cursor-grabbing"
               style={{ zIndex: 30, rotate: liveRotate }}
               drag={cards.length > 1 ? 'x' : false}
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.7}
               onDrag={onDrag}
               onDragEnd={onDragEnd}
+              onPointerDown={() => {
+                cardDraggedRef.current = false
+              }}
+              onDragStart={() => {
+                cardDraggedRef.current = true
+              }}
               initial={{ x: 0, scale: 0.95, y: 16, opacity: 0 }}
               animate={{ x: 0, scale: 1, y: 0, opacity: 1 }}
               exit={{
@@ -210,7 +259,14 @@ export default function ProjectModal({
                   : `Изображение ${(cards[index] as Extract<Card, { kind: 'image' }>).number} из ${(cards[index] as Extract<Card, { kind: 'image' }>).total}`
               }
             >
-              <CardFace card={cards[index]} />
+              <CardFace
+                card={topCard}
+                onZoom={
+                  topCard.kind === 'image'
+                    ? () => openFullscreen(topCard.number - 1)
+                    : () => openFullscreen(0)
+                }
+              />
             </motion.div>
           </AnimatePresence>
         </div>
@@ -270,29 +326,232 @@ export default function ProjectModal({
           </button>
         </div>
       </footer>
+
+      {/* Полноэкранный просмотр фото */}
+      <AnimatePresence>
+        {fullscreen !== null && (
+          <Lightbox
+            key="lightbox"
+            images={gallery}
+            index={fullscreen}
+            direction={fsDirection}
+            title={project.title}
+            alt={project.imageAlt || project.title}
+            onClose={() => setFullscreen(null)}
+            onPaginate={fsPaginate}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }
 
+/**
+ * Клик по зоне просмотра: по самому фото — не закрывать (там drag/навигация),
+ * по пустому полю вокруг (letterbox) — закрыть просмотр.
+ */
+function isClickOnPhoto(e: React.MouseEvent, img: HTMLImageElement | null): boolean {
+  if (!img || !img.naturalWidth || !img.naturalHeight) return true
+  const r = img.getBoundingClientRect()
+  const imgAr = img.naturalWidth / img.naturalHeight
+  const boxAr = r.width / r.height
+  let w = r.width
+  let h = r.height
+  if (boxAr > imgAr) w = r.height * imgAr
+  else h = r.width / imgAr
+  const x0 = r.left + (r.width - w) / 2
+  const y0 = r.top + (r.height - h) / 2
+  return e.clientX >= x0 && e.clientX <= x0 + w && e.clientY >= y0 && e.clientY <= y0 + h
+}
+
+/** Полноэкранный просмотр изображения: ← → / свайп / кнопки, клик по фону — закрыть */
+function Lightbox({
+  images,
+  index,
+  direction,
+  title,
+  alt,
+  onClose,
+  onPaginate,
+}: {
+  images: string[]
+  index: number
+  direction: number
+  title: string
+  alt: string
+  onClose: () => void
+  onPaginate: (delta: number) => void
+}) {
+  return (
+    <motion.div
+      className="fixed inset-0 z-[300] flex flex-col bg-[#0A0A0A]"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Изображение на весь экран: ${title}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.18 }}
+    >
+      <div className="noise-overlay" />
+
+      {/* Верхняя панель */}
+      <div className="relative z-10 flex shrink-0 items-center justify-between gap-3 border-b-2 border-white/10 px-4 py-3 sm:px-6">
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="font-mono text-xs font-semibold tracking-widest text-rex-red">
+            {String(index + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
+          </span>
+          <span className="hidden truncate font-mono text-[11px] uppercase tracking-[0.14em] text-white/50 sm:block">
+            {title}
+          </span>
+        </div>
+        <button
+          onClick={onClose}
+          aria-label="Закрыть полноэкранный просмотр"
+          className="grid h-11 w-11 shrink-0 place-items-center border-2 border-white/25 text-paper transition-colors hover:border-rex-red hover:bg-rex-red sm:h-12 sm:w-12"
+        >
+          <X className="h-5 w-5" />
+        </button>
+      </div>
+
+      {/* Изображение */}
+      <div
+        className="relative flex flex-1 items-center justify-center overflow-hidden p-3 sm:p-6"
+        onClick={onClose}
+      >
+        <AnimatePresence initial={false} custom={direction} mode="popLayout">
+          <motion.div
+            key={index}
+            className="relative h-full w-full select-none"
+            initial={{ opacity: 0, x: direction * 90 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: direction * -90 }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
+            drag={images.length > 1 ? 'x' : false}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.6}
+            onDragEnd={(_e, info) => {
+              if (info.offset.x < -SWIPE_THRESHOLD || info.velocity.x < -VELOCITY_THRESHOLD) {
+                onPaginate(1)
+              } else if (info.offset.x > SWIPE_THRESHOLD || info.velocity.x > VELOCITY_THRESHOLD) {
+                onPaginate(-1)
+              }
+            }}
+            onClick={(e) => {
+              e.stopPropagation()
+              const img = e.currentTarget.querySelector('img')
+              if (!isClickOnPhoto(e, img)) onClose()
+            }}
+          >
+            <Image
+              src={images[index]}
+              alt={`${alt} — изображение ${index + 1} из ${images.length}`}
+              fill
+              sizes="100vw"
+              className="object-contain"
+              priority
+              draggable={false}
+            />
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Стрелки */}
+        {images.length > 1 && (
+          <>
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                onPaginate(-1)
+              }}
+              aria-label="Предыдущее изображение"
+              className="absolute left-2 top-1/2 z-10 grid h-12 w-12 -translate-y-1/2 place-items-center border-2 border-white/25 bg-ink/70 text-paper transition-colors hover:border-rex-red hover:bg-rex-red sm:left-4 sm:h-14 sm:w-14"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                onPaginate(1)
+              }}
+              aria-label="Следующее изображение"
+              className="absolute right-2 top-1/2 z-10 grid h-12 w-12 -translate-y-1/2 place-items-center border-2 border-white/25 bg-ink/70 text-paper transition-colors hover:border-rex-red hover:bg-rex-red sm:right-4 sm:h-14 sm:w-14"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Подпись */}
+      <div className="relative z-10 shrink-0 border-t-2 border-white/10 px-4 py-2.5 text-center sm:px-6">
+        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/45">
+          ESC — закрыть · ← → или свайп — листать
+        </span>
+      </div>
+    </motion.div>
+  )
+}
+
+/** Кнопка-зум с иконкой Maximize2 (подсказка, что фото открывается на весь экран) */
+function ZoomHint() {
+  return (
+    <span
+      className="pointer-events-none absolute bottom-3 right-3 z-10 grid h-10 w-10 place-items-center border-2 border-white/30 bg-ink/85 text-white opacity-0 transition-opacity duration-200 focus-within:opacity-100 group-hover/zoom:opacity-100"
+      aria-hidden="true"
+    >
+      <Maximize2 className="h-4 w-4" />
+    </span>
+  )
+}
+
 /** Лицо карточки стека */
-function CardFace({ card, dimmed = false }: { card: Card; dimmed?: boolean }) {
+function CardFace({
+  card,
+  dimmed = false,
+  onZoom,
+}: {
+  card: Card
+  dimmed?: boolean
+  onZoom?: () => void
+}) {
   if (card.kind === 'info') {
     const p = card.project
     const galleryCount = p.images.length
     return (
       <div className="flex h-full flex-col bg-ink text-paper">
-        {/* Обложка */}
+        {/* Обложка — клик открывает фуллскрин-просмотр галереи */}
         <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden border-b-2 border-ink bg-[#141414]">
-          <Image
-            src={p.image}
-            alt={p.imageAlt || p.title}
-            fill
-            sizes="(max-width: 640px) 92vw, 560px"
-            className="object-cover"
-            priority={!dimmed}
-          />
+          {onZoom && !dimmed ? (
+            <button
+              type="button"
+              onClick={onZoom}
+              aria-label="Открыть изображения на весь экран"
+              className="group/zoom absolute inset-0 block cursor-zoom-in"
+            >
+              <Image
+                src={p.image}
+                alt={p.imageAlt || p.title}
+                fill
+                sizes="(max-width: 640px) 92vw, 560px"
+                className="object-cover"
+                priority={!dimmed}
+                draggable={false}
+              />
+              <ZoomHint />
+            </button>
+          ) : (
+            <Image
+              src={p.image}
+              alt={p.imageAlt || p.title}
+              fill
+              sizes="(max-width: 640px) 92vw, 560px"
+              className="object-cover"
+              priority={!dimmed}
+              draggable={false}
+            />
+          )}
           {p.featured && (
-            <span className="absolute right-3 top-3 bg-rex-red px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-white">
+            <span className="pointer-events-none absolute right-3 top-3 z-10 bg-rex-red px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-white">
               Featured
             </span>
           )}
@@ -323,25 +582,48 @@ function CardFace({ card, dimmed = false }: { card: Card; dimmed?: boolean }) {
     )
   }
 
-  // Карточка-изображение: вся работа целиком (contain), тёмная подложка-рамка
+  // Карточка-изображение: вся работа целиком (contain), тёмная подложка-рамка.
+  // Клик по фото — полноэкранный просмотр.
   return (
     <div className="relative h-full w-full overflow-hidden bg-[#141414]">
-      <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-5">
-        <div className="relative h-full w-full">
-          <Image
-            src={card.src}
-            alt={`${card.alt} — изображение ${card.number}`}
-            fill
-            sizes="(max-width: 640px) 92vw, 560px"
-            className="object-contain"
-          />
+      {onZoom && !dimmed ? (
+        <button
+          type="button"
+          onClick={onZoom}
+          aria-label={`Открыть изображение ${card.number} на весь экран`}
+          className="group/zoom absolute inset-0 flex cursor-zoom-in items-center justify-center p-3 sm:p-5"
+        >
+          <span className="relative block h-full w-full">
+            <Image
+              src={card.src}
+              alt={`${card.alt} — изображение ${card.number}`}
+              fill
+              sizes="(max-width: 640px) 92vw, 560px"
+              className="object-contain"
+              draggable={false}
+            />
+          </span>
+          <ZoomHint />
+        </button>
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-5">
+          <div className="relative h-full w-full">
+            <Image
+              src={card.src}
+              alt={`${card.alt} — изображение ${card.number}`}
+              fill
+              sizes="(max-width: 640px) 92vw, 560px"
+              className="object-contain"
+              draggable={false}
+            />
+          </div>
         </div>
-      </div>
+      )}
       {/* Номер и подпись */}
-      <span className="absolute bottom-3 right-3 border-2 border-white/25 bg-ink/85 px-2 py-1 font-mono text-[10px] font-semibold tracking-widest text-white/80 sm:text-[11px]">
+      <span className="pointer-events-none absolute bottom-3 right-3 z-10 border-2 border-white/25 bg-ink/85 px-2 py-1 font-mono text-[10px] font-semibold tracking-widest text-white/80 sm:text-[11px]">
         {String(card.number).padStart(2, '0')} / {String(card.total).padStart(2, '0')}
       </span>
-      <span className="absolute left-3 top-3 max-w-[65%] truncate font-mono text-[10px] uppercase tracking-[0.14em] text-white/50 sm:text-[11px]">
+      <span className="pointer-events-none absolute left-3 top-3 z-10 max-w-[65%] truncate font-mono text-[10px] uppercase tracking-[0.14em] text-white/50 sm:text-[11px]">
         {card.alt}
       </span>
     </div>

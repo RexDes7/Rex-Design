@@ -1,13 +1,13 @@
 /**
- * Портфолио (#/cases) — горизонтальные автоленты карточек по категориям.
- * Каждый ряд — своя категория, лента медленно движется по ширине экрана
- * (чередование направлений, пауза при наведении). Клик по карточке
- * открывает кейс в виде стопки перелистываемых карточек (ProjectModal).
- * Принцип категорий сохранён: чипы-фильтры + сортировка как в оригинале.
+ * Портфолио (#/cases) — горизонтальные ленты карточек по категориям.
+ * Каждый ряд — своя категория: лента медленно движется сама, но её можно
+ * зажать (ЛКМ / палец) и промотать вперёд-назад с инерцией.
+ * Клик по карточке открывает кейс в виде стопки перелистываемых карточек
+ * (ProjectModal). Принцип категорий сохранён: чипы-фильтры + сортировка.
  */
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDownWideNarrow, ArrowRight, FolderX, Loader2 } from 'lucide-react'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
@@ -122,7 +122,10 @@ function MarqueeCard({
   )
 }
 
-/** Ряд-лента одной категории */
+/** Порог (px), после которого жест считается промоткой, а не кликом */
+const DRAG_CLICK_THRESHOLD = 6
+
+/** Ряд-лента одной категории: автопрокрутка + ручная промотка (drag с инерцией) */
 function CategoryRow({
   category,
   projects,
@@ -134,12 +137,182 @@ function CategoryRow({
   reverse: boolean
   onOpenProject: (p: Project) => void
 }) {
-  // Длительность прокрутки зависит от числа карточек — движение всегда спокойное
+  // Длительность автопрокрутки зависит от числа карточек — движение всегда спокойное
   const duration = Math.max(45, projects.length * 16)
 
-  // Копия списка для бесшовного цикла: track = [контент][контент], -50% сдвига
+  const viewportRef = useRef<HTMLDivElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const copyRef = useRef<HTMLDivElement>(null)
+
+  const [dragging, setDragging] = useState(false)
+  // Число копий контента: хватает, чтобы лента не «кончалась» на широких экранах
+  const [copies, setCopies] = useState(2)
+  const [reducedMotion, setReducedMotion] = useState(false)
+
+  // Состояние прокрутки — в ref'ах: 60 fps без ререндеров React
+  const offset = useRef(0) // сдвиг ленты влево, px; всегда в [0, half)
+  const half = useRef(1) // ширина одной копии контента, px
+  const vel = useRef(0) // скорость инерции после броска, px/с
+  const hoverRef = useRef(false)
+  const reducedRef = useRef(false)
+  const suppressClick = useRef(false)
+  const drag = useRef<{
+    id: number
+    startX: number
+    startOffset: number
+    lastX: number
+    lastT: number
+    moved: number
+  } | null>(null)
+
+  useEffect(() => {
+    reducedRef.current = reducedMotion
+  }, [reducedMotion])
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const update = () => setReducedMotion(mq.matches)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
+
+  /** Сшивка бесконечной ленты: держим offset в [0, half) — копии одинаковые, стык невиден */
+  const wrapOffset = (x: number) => {
+    const h = half.current
+    return ((x % h) + h) % h
+  }
+
+  const applyTransform = () => {
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translate3d(${-offset.current}px, 0, 0)`
+    }
+  }
+
+  // Замер одной копии + пересчёт числа копий под ширину экрана
+  useEffect(() => {
+    const measure = () => {
+      if (!copyRef.current || !viewportRef.current) return
+      half.current = Math.max(1, copyRef.current.getBoundingClientRect().width)
+      // Нужно: ширина трека ≥ half + viewport → copies ≥ 1 + viewport / half
+      const need = Math.max(2, Math.ceil(1 + viewportRef.current.clientWidth / half.current))
+      setCopies(need)
+      offset.current = wrapOffset(offset.current)
+      applyTransform()
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    if (viewportRef.current) ro.observe(viewportRef.current)
+    return () => ro.disconnect()
+  }, [])
+
+  // Кадровый цикл: во время drag смещение задаёт указатель; после броска —
+  // инерция с затуханием; затем — спокойная автопрокрутка (пауза при hover)
+  useEffect(() => {
+    let raf = 0
+    let last = performance.now()
+    const tick = (now: number) => {
+      const dt = Math.min(0.064, (now - last) / 1000)
+      last = now
+      if (!drag.current) {
+        if (Math.abs(vel.current) > 12) {
+          offset.current = wrapOffset(offset.current + vel.current * dt)
+          vel.current *= Math.exp(-dt * 3.2)
+        } else {
+          vel.current = 0
+          if (!hoverRef.current && !reducedRef.current) {
+            offset.current = wrapOffset(
+              offset.current + (half.current / duration) * dt * (reverse ? -1 : 1)
+            )
+          }
+        }
+        applyTransform()
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [duration, reverse])
+
+  /** Зажать ЛКМ / палец и тянуть — лента следует за указателем */
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return
+    const start = {
+      id: e.pointerId,
+      startX: e.clientX,
+      startOffset: offset.current,
+      lastX: e.clientX,
+      lastT: performance.now(),
+      moved: 0,
+    }
+    drag.current = start
+    vel.current = 0
+    setDragging(true)
+
+    const move = (ev: PointerEvent) => {
+      const d = drag.current
+      if (!d || d.id !== ev.pointerId) return
+      // Кнопку отпустили вне окна — жест завершаем
+      if (ev.pointerType === 'mouse' && ev.buttons === 0) {
+        end(false)
+        return
+      }
+      const now = performance.now()
+      const dt = Math.max(1, now - d.lastT) / 1000
+      // Мгновенная скорость ленты (знак обратен движению указателя), сглаженная
+      const inst = -(ev.clientX - d.lastX) / dt
+      vel.current = vel.current * 0.72 + inst * 0.28
+      d.lastX = ev.clientX
+      d.lastT = now
+      d.moved = Math.max(d.moved, Math.abs(ev.clientX - d.startX))
+      offset.current = wrapOffset(d.startOffset - (ev.clientX - d.startX))
+      applyTransform()
+    }
+
+    const end = (cancelled: boolean) => {
+      window.removeEventListener('pointermove', move)
+      window.removeEventListener('pointerup', onUp)
+      window.removeEventListener('pointercancel', onCancel)
+      if (cancelled || start.moved <= DRAG_CLICK_THRESHOLD) vel.current = 0
+      drag.current = null
+      if (start.moved > DRAG_CLICK_THRESHOLD) {
+        // Это была промотка — глушим клик, который браузер даст сразу после pointerup
+        suppressClick.current = true
+        window.setTimeout(() => {
+          suppressClick.current = false
+        }, 120)
+      }
+      setDragging(false)
+    }
+    const onUp = (ev: PointerEvent) => {
+      if (ev.pointerId === start.id) end(false)
+    }
+    const onCancel = (ev: PointerEvent) => {
+      if (ev.pointerId === start.id) end(true)
+    }
+
+    window.addEventListener('pointermove', move, { passive: true })
+    window.addEventListener('pointerup', onUp)
+    window.addEventListener('pointercancel', onCancel)
+  }
+
+  /** Горизонтальное колесо / тачпад — тоже проматывает ленту */
+  const onWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) + 2) {
+      offset.current = wrapOffset(offset.current + e.deltaX)
+      vel.current = 0
+      applyTransform()
+    }
+  }
+
+  // Контент ленты: N одинаковых копий (1-я — «живая» для скринридеров)
   const copy = (copyIndex: number) => (
-    <div className="flex shrink-0 gap-5 pr-5 sm:gap-6 sm:pr-6" aria-hidden={copyIndex === 1}>
+    <div
+      key={copyIndex}
+      ref={copyIndex === 0 ? copyRef : undefined}
+      className="flex shrink-0 gap-5 pr-5 sm:gap-6 sm:pr-6"
+      aria-hidden={copyIndex > 0}
+    >
       {projects.map((p, i) => (
         <MarqueeCard key={`${copyIndex}-${p.id}`} project={p} index={i} onOpen={onOpenProject} />
       ))}
@@ -158,21 +331,34 @@ function CategoryRow({
             {String(projects.length).padStart(2, '0')}
           </span>
         </div>
-        <span className="hidden font-mono text-[11px] uppercase tracking-widest text-ink/45 sm:block">
-          {projects.length % 2 === 1 ? '⟶' : '⟵'} автопрокрутка
+        <span className="hidden items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-ink/45 sm:flex">
+          <span aria-hidden="true">{reverse ? '⟵' : '⟶'}</span>
+          зажмите и тяните
         </span>
       </div>
 
-      {/* Лента */}
+      {/* Лента: тянется мышью/пальцем, крутится сама */}
       <div
+        ref={viewportRef}
+        onPointerDown={onPointerDown}
+        onWheel={onWheel}
+        onMouseEnter={() => (hoverRef.current = true)}
+        onMouseLeave={() => (hoverRef.current = false)}
+        onDragStart={(e) => e.preventDefault()}
+        onClickCapture={(e) => {
+          // После промотки не открывать кейс, на котором остановился указатель
+          if (suppressClick.current) {
+            e.preventDefault()
+            e.stopPropagation()
+          }
+        }}
         className={cn(
-          'marquee-fade marquee-paused overflow-hidden py-2',
-          reverse ? 'marquee-reverse' : undefined
+          'drag-marquee marquee-fade overflow-hidden py-2',
+          dragging ? 'is-dragging' : 'cursor-grab'
         )}
       >
-        <div className="marquee-track" style={{ '--marquee-speed': `${duration}s` } as React.CSSProperties}>
-          {copy(0)}
-          {copy(1)}
+        <div ref={trackRef} className="drag-track">
+          {Array.from({ length: copies }, (_, n) => copy(n))}
         </div>
       </div>
     </section>
@@ -227,8 +413,9 @@ export default function CasesView({ onOpenProject }: { onOpenProject: (p: Projec
           <span className="text-rex-red">по направлениям</span>
         </h1>
         <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-ink/70">
-          Каждое направление — отдельная лента. Нажмите на карточку, чтобы
-          листать кейс как стопку: свайп, стрелки или кнопки.
+          Каждое направление — отдельная лента: она движется сама, но её можно
+          зажать мышью и промотать. Нажмите на карточку, чтобы листать кейс
+          как стопку — а фото внутри открываются на весь экран.
         </p>
       </section>
 
